@@ -1,0 +1,350 @@
+/* ====================== homepage.css ====================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ====================== THEME ====================== */
+.light {
+    --bg: #ffffff;
+    --text: #111111;
+    --text-secondary: #555555;
+    --border: #e0e0e0;
+    --card-bg: #f8f8f8;
+    --accent: #f62d1f;
+    --sidebar-bg: #f9f9f9;
+    --header-bg: #ffffff;
+}
+
+.dark {
+    --bg: #121212;
+    --text: #e0e0e0;
+    --text-secondary: #aaaaaa;
+    --border: #333333;
+    --card-bg: #1e1e1e;
+    --accent: #ff4d3d;
+    --sidebar-bg: #1a1a1a;
+    --header-bg: #1a1a1a;
+}
+
+/* ====================== HEADER ====================== */
+.header, .main, .app, .footer {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+.header {
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ====================== MAIN ====================== */
+.main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ==================== КНОПКА КАТАЛОГ ==================== */
+.main > button {                    /* більш точний селектор */
+    background: #f62d1f;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 5px rgba(246, 45, 31, 0.3);
+}
+
+.main > button:hover {
+    background: #e02a1b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(246, 45, 31, 0.4);
+}
+
+/* Іконка в кнопці трохи нижче */
+.main > button svg {
+    margin-top: 2px;
+}
+
+/* Блок пошуку */
+.main > div {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+}
+
+.main > div:focus-within {
+    border-color: #f62d1f;
+    box-shadow: 0 0 0 3px rgba(246, 45, 31, 0.15);
+}
+
+/* Лупа */
+.main > div svg:first-child {
+    margin-left: 14px;
+    color: var(--text-secondary);
+}
+
+/* Поле вводу */
+.main input {
+    flex: 1;
+    padding: 13px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+}
+
+/* Кнопка "Знайти" */
+.main > div button {
+    background: #f62d1f;
+    color: white;
+    padding: 13px 26px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.main > div button:hover {
+    background: #e02a1b;
+}
+
+/* Іконки справа */
+.main > svg {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+    margin-left: 8px;
+}
+
+.main > svg:hover {
+    transform: scale(1.22);
+}
+
+/* ====================== APP ====================== */
+.app {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 25px;
+}
+
+.app > div:first-child {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    align-self: flex-start;
+    position: sticky;
+    top: 90px;
+}
+
+.app > div:last-child {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Категорії */
+.div {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.div .div {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.25s ease;
+}
+
+.div .div:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 15px rgba(246, 45, 31, 0.1);
+}
+
+.div h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.div ul {
+    list-style: none;
+}
+
+.div li {
+    padding: 5px 0;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.div li:hover {
+    color: var(--accent);
+    padding-left: 8px;
+}
+
+/* Адаптивність */
+@media (max-width: 1100px) {
+    .main { padding: 10px 15px; gap: 10px; }
+}
+
+@media (max-width: 1024px) {
+    .app { flex-direction: column; }
+    .app > div:first-child { width: 100%; position: static; }
+}
+
+@media (max-width: 768px) {
+    .main { flex-direction: column; align-items: stretch; }
+    .main > div { min-width: auto; }
+    .main > button { justify-content: center; }
+    .app { padding: 0 15px; }
+}
+
+@media (max-width: 480px) {
+    .main { padding: 8px 12px; }
+}
+
+/* Анімації */
+button, .div .div, .main > svg {
+    transition: all 0.25s ease;
+}
+/* ====================== КАРТКА ТОВАРУ ====================== */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 100%;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    border-color: var(--accent);
+}
+
+/* Зображення */
+.iLove {
+    /* обов'язково */
+    height: 195px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f8f8;
+    border-bottom: 1px solid var(--border);
+}
+
+.iLove img {
+    max-height: 155px;
+    object-fit: contain;
+}
+
+/* Серце — правильно в куті */
+.IconHeart {
+    position: relative;
+    top: -70px;
+    right: -15px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Назва */
+.card h4 {
+    padding: 12px 14px 8px;
+    font-size: 14.8px;
+    line-height: 1.35;
+    color: var(--text);
+    min-height: 44px;
+}
+
+/* Зірки */
+.stars {
+    padding: 0 14px 6px;
+    display: flex;
+    gap: 2px;
+}
+
+.stars svg {
+    width: 17px;
+    height: 17px;
+    fill: #ffd700 !important;
+    stroke: none !important;
+}
+
+/* Ціна + Кошик */
+.info {
+    padding: 10px 14px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.amount {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.amount p:first-child {
+    font-size: 17.5px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.amount p:last-child {
+    font-size: 13.5px;
+    color: #888;
+    text-decoration: line-through;
+}
+
+/* Сітка (менша ширина) */
+.app > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));   /* ще менша */
+    gap: 18px;
+}
+
+/* Темна тема */
+.dark .iLove {
+    background: #2a2a2a;
+}
+
+.dark .stars svg {
+    fill: #ffcc33 !important;
+}
