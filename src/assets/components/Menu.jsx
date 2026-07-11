@@ -38,21 +38,6 @@ export default function BasicMenu() {
                 width: "340px"
 
             }}>
-                <Button
-                    fullWidth
-                    style={{
-                        backgroundColor: "#f62d1f",
-                        color: "white",
-                        padding: "16px 20px",
-                        fontSize: "16px",
-                        fontWeight: "700",
-                        whiteSpace: "nowrap",
-                        textAlign: "left",
-                        height:"50px"
-                    }}
-                >
-                    Каталог товарів
-                </Button>
 
                 {menu.map((item, index) => {
                     if (Array.isArray(item.info)) {

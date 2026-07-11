@@ -58,10 +58,10 @@ body {
     flex-wrap: wrap;
 }
 
-/* ==================== КНОПКА КАТАЛОГ ==================== */
-.main > button {                    /* більш точний селектор */
-    background: #f62d1f;
-    color: white;
+/* Кнопка Каталог — без сірого фону */
+.main > button {
+    background: #f62d1f !important;
+    color: white !important;
     display: flex;
     align-items: center;
     gap: 9px;
@@ -75,14 +75,9 @@ body {
 }
 
 .main > button:hover {
-    background: #e02a1b;
+    background: #e02a1b !important;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(246, 45, 31, 0.4);
-}
-
-/* Іконка в кнопці трохи нижче */
-.main > button svg {
-    margin-top: 2px;
 }
 
 /* Блок пошуку */
@@ -134,17 +129,21 @@ body {
     background: #e02a1b;
 }
 
-/* Іконки справа */
-.main > svg {
+/* Іконки справа — кошик як інші */
+.main > svg,
+.main Button svg {
     width: 26px;
     height: 26px;
     cursor: pointer;
     transition: transform 0.25s ease;
     margin-left: 8px;
+    background: transparent !important;
 }
 
-.main > svg:hover {
+.main > svg:hover,
+.main Button:hover svg {
     transform: scale(1.22);
+    color: #f62d1f !important;
 }
 
 /* ====================== APP ====================== */
@@ -216,31 +215,6 @@ body {
     padding-left: 8px;
 }
 
-/* Адаптивність */
-@media (max-width: 1100px) {
-    .main { padding: 10px 15px; gap: 10px; }
-}
-
-@media (max-width: 1024px) {
-    .app { flex-direction: column; }
-    .app > div:first-child { width: 100%; position: static; }
-}
-
-@media (max-width: 768px) {
-    .main { flex-direction: column; align-items: stretch; }
-    .main > div { min-width: auto; }
-    .main > button { justify-content: center; }
-    .app { padding: 0 15px; }
-}
-
-@media (max-width: 480px) {
-    .main { padding: 8px 12px; }
-}
-
-/* Анімації */
-button, .div .div, .main > svg {
-    transition: all 0.25s ease;
-}
 /* ====================== КАРТКА ТОВАРУ ====================== */
 .card {
     background: var(--card-bg);
@@ -249,8 +223,6 @@ button, .div .div, .main > svg {
     overflow: hidden;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    width: 100%;
-    max-width: 100%;
 }
 
 .card:hover {
@@ -261,8 +233,8 @@ button, .div .div, .main > svg {
 
 /* Зображення */
 .iLove {
-    /* обов'язково */
-    height: 195px;
+    position: relative;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,15 +243,15 @@ button, .div .div, .main > svg {
 }
 
 .iLove img {
-    max-height: 155px;
+    max-height: 160px;
     object-fit: contain;
 }
 
-/* Серце — правильно в куті */
+/* Серце */
 .IconHeart {
-    position: relative;
-    top: -70px;
-    right: -15px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
     cursor: pointer;
     z-index: 10;
 }
@@ -333,11 +305,11 @@ button, .div .div, .main > svg {
     text-decoration: line-through;
 }
 
-/* Сітка (менша ширина) */
+/* Сітка */
 .app > div:last-child {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));   /* ще менша */
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+    gap: 20px;
 }
 
 /* Темна тема */
@@ -348,3 +320,9 @@ button, .div .div, .main > svg {
 .dark .stars svg {
     fill: #ffcc33 !important;
 }
+
+/* ====================== АНІМАЦІЇ ====================== */
+button, .div .div, .main > svg, IconShoppingCart {
+    transition: all 0.25s ease;
+}
+

@@ -24,6 +24,7 @@ class Category {
         }
     }
 
+
 }
 class SubCategory extends Category {
     products=[];
@@ -42,4 +43,5 @@ class SubCategory extends Category {
         }
     }
 }
+
 export {SubCategory,Category};

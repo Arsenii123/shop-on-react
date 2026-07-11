@@ -1,6 +1,8 @@
 import {Category, SubCategory} from "./Categorry.js";
 import {Product} from "./Product.js";
-import React, {useState, useEffect, createContext, useContext} from "react";
+import {useCartItems, addToCart, deleteFromCart, clearCart,updateCart} from "./Cart.js";
+import React, {useState, useEffect, createContext, useContext, useReducer} from "react";
+import {Modal, Button, Group, Menu} from "@mantine/core";
 import BasicMenu from "./Menu.jsx";
 import './styles/homepage.css'
 import {
@@ -13,11 +15,14 @@ import {
     IconDeviceMobile,
     IconSettings,
     IconHeart,
-    IconStar
+    IconStar,
+    IconX,
+    IconPlus,
+    IconMinus
 } from '@tabler/icons-react';
 
-const ThemeContext = createContext();
 
+const ThemeContext = createContext();
 const category = [
     new Category("Одяг, взуття та прикраси", 1,
         new SubCategory("Жінкам"),
@@ -70,7 +75,8 @@ const category = [
     )
 ];
 const products = [
-    new Product("shirt",100,3,10,"https://content1.rozetka.com.ua/goods/images/big_tile/668103957.jpg")
+    new Product("shirt", 100, 5, 10, "https://content1.rozetka.com.ua/goods/images/big_tile/668103957.jpg"),
+    new Product("shirt2", 100, 5, 10, "https://content1.rozetka.com.ua/goods/images/big_tile/668103957.jpg")
 ]
 const iconMap = {
     1: <IconShirt/>,
@@ -81,54 +87,57 @@ const iconMap = {
     6: <IconGardenCart/>,
     7: <IconDeviceMobile/>
 };
-export function Products(props){
+
+export function Products(props) {
     const {theme} = useContext(ThemeContext);
-    const [f,setF]=useState(false);
-    const r=[];
-    for(let i=0; i<props.rating; i++){
+    const [f, setF] = useState(false);
+    const r = [];
+    for (let i = 0; i < props.rating; i++) {
         r.push(1)
     }
-    return(
+    return (
         <div className={`card ${theme}`}>
             <div className={"iLove"}>
                 <img src={props.img} alt="photo"/>
-                <IconHeart fill={f? "red" : "grey"} onClick={()=>{f ? setF(false) : setF(true)}} className="IconHeart"></IconHeart>
+                <IconHeart fill={f ? "red" : "grey"} onClick={() => {
+                    f ? setF(false) : setF(true)
+                }} className="IconHeart"></IconHeart>
             </div>
             <h4>{props.name}</h4>
             <div className="stars">
                 {
-                    r.map((item,index)=>{
-                            if(item===1){
-                                return(
+                    r.map((item, index) => {
+                            if (item === 1) {
+                                return (
                                     <IconStar key={index} fill="yellow"></IconStar>
                                 );
-                            }
-                            else {
-                                return(
-                                    <IconStar key={index} ></IconStar>
+                            } else {
+                                return (
+                                    <IconStar key={index}></IconStar>
                                 );
                             }
                         }
-
                     )
                 }
             </div>
             <div className="info">
                 <div className="amount">
+                    {props.discount > 0 ? (<p>{props.price - (props.price * props.discount / 100)}</p>) : null}
                     <p>{props.price}</p>
-                    {props.discount>0 ? (<p>{props.discount}</p>): null}
+
 
                 </div>
-                <IconShoppingCart size={18} stroke={1.5}></IconShoppingCart>
+                <IconShoppingCart size={18} stroke={1.5} onClick={() => {
+                    addToCart(new Product(props.name, props.price, props.rating, props.discount, props.img))
+                }
+                }></IconShoppingCart>
             </div>
-
-
-
 
 
         </div>
     )
 }
+
 export function C(props) {
     const [name, setName] = useState(props.name);
     const [show, setShow] = useState(true);
@@ -182,23 +191,113 @@ export function Categories() {
     );
 }
 
+
+
+export function InfoCategories(props) {
+    const initialState = {
+        count: Number(props.count) || 1,
+    };
+
+    function reducer(state, action) {
+        switch (action.type) {
+            case 'INCREMENT':
+                return { count: state.count + 1};
+            case 'DECREMENT':
+                return { count: state.count - 1};
+            default:
+                return state;
+        }
+    }
+
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    // Оновлення бази при зміні кількості
+    useEffect(() => {
+        updateCart(props.name, state.count);
+    }, [state.count, props.name]);
+
+    const price = Number(props.price) || 0;
+    const discount = Number(props.discount) || 0;
+    const finalPrice = price - (price * discount / 100);
+    const total = (finalPrice * state.count).toFixed(0);
+
+    return (
+        <div className="infoincart">
+            <img src={props.img} alt="товар"/>
+            <div className="iname">
+                <h4>{props.name}</h4>
+                <p>Продавець: Shop</p>
+            </div>
+            <div className="amount">
+                <IconMinus
+                    size={24}
+                    stroke={1.5}
+                    onClick={() => (state.count>1 ? dispatch({ type: 'DECREMENT' }) : 0)}
+                    color={state.count > 1 ? 'red' : 'grey'}
+                    style={{ cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: "18px", fontWeight: "600", minWidth: "30px", textAlign: "center" }}>
+                    {state.count}
+                </span>
+                <IconPlus
+                    size={24}
+                    stroke={1.5}
+                    onClick={() => (state.count<50 ? dispatch({ type: 'INCREMENT' }) : 0)}
+                    color={state.count < 50 ? 'red' : 'grey'}
+                    style={{ cursor: 'pointer' }}
+                />
+            </div>
+            <p style={{ fontWeight: "700", fontSize: "17px" }}>
+                {total} $
+            </p>
+        </div>
+    );
+}
+
 function Homepage() {
     const [theme, setTheme] = useState('light');
-
+    const [o, setOpened] = useState(false);
+    const cart = useCartItems() || [];
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     };
-
+    useEffect(() => {
+        cart.map(item => {
+            item.isCart = true;
+            localStorage.setItem("isCart", String(item.isCart));
+        })
+    }, [cart])
     return (
         <>
-            <ThemeContext.Provider value={{theme,toggleTheme}}>
+            <ThemeContext.Provider value={{theme, toggleTheme}}>
                 <header className={`header ${theme}`}></header>
                 <main className={`main ${theme}`}>
                     <BasicMenu></BasicMenu>
-                    <button>
-                        <IconApps size={24} stroke={1.5}/>
-                        Каталог
-                    </button>
+                    <div className="showgroups">
+                        {/* Кнопка Каталог з меню */}
+                        <Menu shadow="md" width={280} position="bottom-start">
+                            <Menu.Target>
+                                <Button
+                                    leftSection={<IconApps size={24} stroke={1.5}/>}
+                                    style={{
+                                        backgroundColor: "#f62d1f",
+                                        color: "white",
+                                        border: "none",
+                                        padding: "10px 20px",
+                                        fontWeight: "600",
+                                        borderRadius: "8px"
+                                    }}
+                                >
+                                    Каталог
+                                </Button>
+                            </Menu.Target>
+
+                            <Menu.Dropdown>
+                                <Menu.Label>Категорії</Menu.Label>
+                                <Categories/>
+                            </Menu.Dropdown>
+                        </Menu>
+                    </div>
                     <div>
                         <IconSearch size={24} stroke={1.5}/>
                         <input type="text" placeholder="Я шукаю"/>
@@ -208,23 +307,60 @@ function Homepage() {
 
                     <IconUser size={18}/>
                     <IconHome size={18}/>
-                    <IconShoppingCart size={18}/>
+                    <Button onClick={() => setOpened(true)} variant="subtle" p={8}>
+                        <IconShoppingCart size={18}/>
+                    </Button>
+                    <Modal
+                        opened={o}
+                        onClose={() => setOpened(false)}
+                        title="Кошик"
+                        centered
+                        overlayProps={{
+                            opacity: 0.4, // затемнення
+                            blur: 2       // легке розмиття фону
+                        }}
+                        withCloseButton={false} // прибираємо стандартний хрестик
+                    >
+                        <Button
+                            variant="subtle"
+                            color="gray"
+                            onClick={() => setOpened(false)}
+                            leftSection={<IconX size={20}/>}
+                        >
+
+                        </Button>
+                        {cart.map((item, index) => (
+                            <div key={index}>
+                                <InfoCategories
+                                    name={item.name}
+                                    price={item.price}
+                                    discount={item.discount}
+                                    img={item.img}
+                                    count={item.count || 1}
+                                />
+                            </div>
+                        ))}
+
+
+                    </Modal>
                     <ThemeContext.Consumer>
-                        {({ toggleTheme }) => (
-                            <IconSettings size={18} onClick={toggleTheme}  />
+                        {({toggleTheme}) => (
+                            <IconSettings size={18} onClick={toggleTheme}/>
                         )}
                     </ThemeContext.Consumer>
 
 
                 </main>
-                <section  className={`app ${theme}`}>
+                <section className={`app ${theme}`}>
                     <div>
                         <Categories/>
                     </div>
                     <div>
                         {
                             products.map((item, index) => (
-                                <div key={index}><Products img={item.img} name={item.name} price={item.price} discount={item.discount} rating={item.rating}></Products></div>
+                                <div key={index}><Products img={item.img} name={item.name} price={item.price}
+                                                           discount={item.discount} rating={item.rating}></Products>
+                                </div>
 
                             ))
                         }
