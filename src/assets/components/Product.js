@@ -2,6 +2,7 @@ class Product {
     isFavourite = false;
     isCart = Boolean(localStorage.getItem('cart')) || false;
     inCart= Number(localStorage.getItem('count') ) || 1;
+    quantity = Number(localStorage.getItem('quantity') || (Math.random()*999)+1);
 
   constructor(name="",price=0,rating=0,discount=0,img='') {
       this.name=name;

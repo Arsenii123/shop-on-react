@@ -27,7 +27,7 @@ body {
     --text-secondary: #aaaaaa;
     --border: #333333;
     --card-bg: #1e1e1e;
-    --accent: #ff4d3d;
+    --accent: #f42d1f;
     --sidebar-bg: #1a1a1a;
     --header-bg: #1a1a1a;
 }
@@ -58,30 +58,25 @@ body {
     flex-wrap: wrap;
 }
 
-/* Кнопка Каталог — без сірого фону */
-.main > button {
-    background: #f62d1f !important;
+/* Кнопка Каталог */
+.main > .m-button{
+    background: #f42d1f !important;
     color: white !important;
+    border: none !important;
+    padding: 10px 22px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 11px 22px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: all 0.25s ease;
-    box-shadow: 0 2px 5px rgba(246, 45, 31, 0.3);
+    gap: 8px;
 }
 
-.main > button:hover {
+.m-button {
     background: #e02a1b !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(246, 45, 31, 0.4);
 }
 
-/* Блок пошуку */
-.main > div {
+/* Блок пошуку (з новим класом) */
+.search-container {
     flex: 1;
     min-width: 300px;
     display: flex;
@@ -93,19 +88,19 @@ body {
     transition: all 0.25s ease;
 }
 
-.main > div:focus-within {
+.search-container:focus-within {
     border-color: #f62d1f;
     box-shadow: 0 0 0 3px rgba(246, 45, 31, 0.15);
 }
 
 /* Лупа */
-.main > div svg:first-child {
+.search-container svg:first-child {
     margin-left: 14px;
     color: var(--text-secondary);
 }
 
 /* Поле вводу */
-.main input {
+.search-container input {
     flex: 1;
     padding: 13px 10px;
     border: none;
@@ -116,7 +111,7 @@ body {
 }
 
 /* Кнопка "Знайти" */
-.main > div button {
+.search-container button {
     background: #f62d1f;
     color: white;
     padding: 13px 26px;
@@ -125,25 +120,22 @@ body {
     cursor: pointer;
 }
 
-.main > div button:hover {
+.search-container button:hover {
     background: #e02a1b;
 }
 
-/* Іконки справа — кошик як інші */
-.main > svg,
-.main Button svg {
+/* Іконки справа */
+.main > svg {
     width: 26px;
     height: 26px;
     cursor: pointer;
     transition: transform 0.25s ease;
-    margin-left: 8px;
-    background: transparent !important;
+    margin-right: 10px;
+
 }
 
-.main > svg:hover,
-.main Button:hover svg {
+.main > svg:hover {
     transform: scale(1.22);
-    color: #f62d1f !important;
 }
 
 /* ====================== APP ====================== */
@@ -321,8 +313,159 @@ body {
     fill: #ffcc33 !important;
 }
 
-/* ====================== АНІМАЦІЇ ====================== */
+/* Анімації */
 button, .div .div, .main > svg, IconShoppingCart {
     transition: all 0.25s ease;
 }
+
+
+/* ====================== ІКОНКА КОШИКА ====================== */
+.CartButton,
+.CartButton svg {
+    color: black !important;
+    cursor: pointer;
+    background-color: transparent !important;
+    transition: transform 0.25s ease;
+    margin-right: 4px !important;   /* зменшив відступ */
+}
+
+.CartButton:hover svg {
+    transform: scale(1.22);
+}
+
+/* Темна тема */
+.dark .CartButton svg {
+    color: #ddd !important;
+}
+.mantine-Modal-content {
+    border-radius: 16px !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25) !important;
+    max-width: 520px !important;
+    margin-right: 112% !important;   /* приблизно по центру */
+    position: relative !important;
+}
+
+/* Для різних розмірів */
+@media (max-width: 1400px) {
+    .mantine-Modal-content {
+        margin-left:2% !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .mantine-Modal-content {
+        margin-left: 8% !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .mantine-Modal-content {
+        margin-left: 6% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .mantine-Modal-content {
+        margin-left: 5% !important;
+        max-width: 90% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .mantine-Modal-content {
+        margin-left: 2% !important;
+        max-width: 96% !important;
+    }
+}
+
+.mantine-Modal-header {
+    border-bottom: 1px solid #eee !important;
+    padding: 16px 24px !important;
+}
+
+.mantine-Modal-close {
+    color: #f62d1f !important;
+    background: transparent !important;
+    transition: all 0.25s;
+}
+
+.mantine-Modal-close:hover {
+    transform: rotate(90deg);
+    background: #fee !important;
+}
+
+/* Елементи в кошику */
+.infoincart {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 3px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.infoincart img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+/* Анімації + і - */
+.infoincart> svg {
+    transition: transform 0.2s ease !important;
+}
+.a> svg {
+    transition: transform 0.2s ease !important;
+}
+.infoincart> svg:hover {
+    transform: scale(1.3) !important;
+}
+.a> svg:hover {
+    transform: scale(1.3) !important;
+}
+
+/* Анімація хрестика */
+.mantine-Modal-close {
+    transition: transform 0.3s ease !important;
+}
+
+.mantine-Modal-close:hover {
+    transform: rotate(90deg) !important;
+}
+
+/* Стиль кнопки "Зробити замовлення" */
+.makemodalorder {
+    background: #f62d1f !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+    margin-top: 16px !important;
+    transition: all 0.25s ease !important;
+}
+
+.makemodalorder:hover {
+    background: #e02a1b !important;
+    transform: translateY(-1px) !important;
+}
+.info>svg{
+    cursor: pointer;
+    transition: transform 0.25s ease !important;
+}
+.info>svg:hover {
+    transform: scale(1.3) !important;
+}
+
+
+
+
+
 

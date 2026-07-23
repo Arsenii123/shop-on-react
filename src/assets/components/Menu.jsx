@@ -24,7 +24,7 @@ export default function BasicMenu() {
             position="bottom-start"
         >
             <Menu.Target>
-                <Button variant="subtle" p={8}>
+                <Button className="m-button" >
                     <IconMenu2 size={28} stroke={1.8} />
                 </Button>
             </Menu.Target>

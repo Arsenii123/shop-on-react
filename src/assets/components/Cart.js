@@ -45,8 +45,13 @@ export async function updateCart(name, newCount) {
     }
 }
 
-export async function deleteFromCart(id) {
-    await db.items.delete(id);
+export async function deleteFromCart(name) {
+    if (!name) return;
+    const existing = await db.items.where('name').equals(name).first();
+    if (existing) {
+        await db.items.delete(existing.id);
+    }
+
 }
 
 export async function clearCart() {

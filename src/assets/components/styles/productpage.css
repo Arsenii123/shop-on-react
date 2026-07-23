@@ -1,0 +1,88 @@
+/* ====================== ФІЛЬТР (z-index для меню) ====================== */
+.filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    top: 80px;
+    z-index: 1;   /* нижче меню */
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.filter:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.filter > div {
+    flex: 1;
+    min-width: 220px;
+}
+
+.filter label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14px;
+}
+
+/* Інпути, селекти, ползунок */
+.filter input[type="text"],
+.filter select,
+.filter input[type="range"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text);
+    transition: all 0.25s ease;
+}
+
+.filter input[type="text"]:focus,
+.filter select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(246, 45, 31, 0.15);
+}
+
+.filter input[type="range"] {
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+/* Адаптивність */
+@media (max-width: 1200px) {
+    .filter {
+        gap: 16px;
+    }
+    .filter > div {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 992px) {
+    .filter {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+        position: static;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter > div {
+        min-width: 100%;
+    }
+}
