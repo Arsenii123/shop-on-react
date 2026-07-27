@@ -1,13 +1,13 @@
 import {Category, SubCategory} from "./Categorry.js";
 import {Product} from "./Product.js";
-import {useCartItems, addToCart, deleteFromCart, clearCart,updateCart} from "./Cart.js";
+import {useCartItems, addToCart, deleteFromCart, clearCart, updateCart} from "./Cart.js";
 import React, {useState, useEffect, createContext, useContext, useReducer, useRef, use} from "react";
 import {Modal, Button, Group, Menu} from "@mantine/core";
 import BasicMenu from "./Menu.jsx";
-import {category, products,iconMap} from "./homepage.jsx";
+import {category, products, iconMap, change, store, nameSlice} from "./homepage.jsx";
 import {InfoCategories} from "./homepage.jsx";
 import './styles/productpage.css'
-
+import {useParams} from 'react-router-dom';
 import {
     IconApps, IconSearch, IconHome, IconShoppingCart, IconUser, IconShirt,
     IconBike,
@@ -23,10 +23,15 @@ import {
     IconPlus,
     IconMinus
 } from '@tabler/icons-react';
+
 const ThemeContext = createContext();
+import {useSelector, useDispatch} from 'react-redux'
+import {Link} from "react-router-dom";
+
 export function C(props) {
     const [name, setName] = useState(props.name);
     const [show, setShow] = useState(true);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (props.name === "" || props.name === null) {
@@ -49,9 +54,14 @@ export function C(props) {
                     </h3>
                     <ul>
                         {currentCategory.categories.map((item, index) => (
-                            <li key={index}>
-                                {item.name}
-                            </li>
+                            <Link to={`/product/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={() => {
+                                dispatch(change(item.name))
+                                localStorage.setItem('found', item.name.trim().toLowerCase());
+                            }} key={index}>
+                                <li>
+                                    {item.name}
+                                </li>
+                            </Link>
                         ))}
 
                     </ul>
@@ -76,6 +86,7 @@ export function Categories() {
         </div>
     );
 }
+
 function InfiniteScrollLocal(props) {
     const [visibleItems, setVisibleItems] = useState(props.items.slice(0, 10));
     const [page, setPage] = useState(1);
@@ -88,7 +99,7 @@ function InfiniteScrollLocal(props) {
                     setPage((prev) => prev + 1);
                 }
             },
-            { threshold: 0.1 }
+            {threshold: 0.1}
         );
 
         if (loadMoreRef.current) {
@@ -109,16 +120,17 @@ function InfiniteScrollLocal(props) {
     }, [page, props.items]);
 
     return (
-        <div>
+        <div className={'listProducts'}>
             {visibleItems.map((item, idx) => (
                 <div key={idx}><Products img={item.img} name={item.name} price={item.price}
-                                           discount={item.discount} rating={item.rating}></Products>
+                                         discount={item.discount} rating={item.rating}></Products>
                 </div>
             ))}
-            <div ref={loadMoreRef} style={{ height: "20px" }} />
+            <div ref={loadMoreRef} style={{height: "20px"}}/>
         </div>
     );
 }
+
 export function Products(props) {
     const {theme} = useContext(ThemeContext);
     const [f, setF] = useState(false);
@@ -168,28 +180,77 @@ export function Products(props) {
         </div>
     )
 }
-export function ProductPage(){
+
+export function ProductPage() {
     const [theme, setTheme] = useState('light');
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     };
-    const [price, setPrice] = useState(1000);
+    const {namepath} = useParams();
+    const [price, setPrice] = useState(50000);
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [name, setName] = useState("");
     const [rating, setRating] = useState(6);
+    const [currentCategory, setCurrentCategory] = useState(null); // лучше null, а не []
 
-    const filteredPrice=products.filter(product=>Math.floor(product.price/100)<=price/100 );
-    const filteredName=filteredPrice.filter(product=>product.name.includes(name.toLowerCase()));
-    const filtered = filteredName.filter(product=>product.rating===rating);
+    const getCategory = useSelector((state) => state.nameCategory?.payload || state.name?.payload || "");
+    useEffect(() => {
+        let rawName = namepath || getCategory || localStorage.getItem('found') || "";
 
-    return(
+        if (!rawName) {
+            setCurrentCategory(null);
+            return;
+        }
+
+        const searchName = rawName.trim().toLowerCase();
+        console.log(localStorage.getItem('found'))// ← приведи к нижнему регистру
+
+        let foundSubCategory = null;
+
+
+        for (let i = 0; i < category.length; i++) {
+            for (let j = 0; j < category[i].categories.length; j++) {
+                const subCat = category[i].categories[j];
+
+                if (subCat.name.trim().toLowerCase() === searchName) {   // ← обе стороны в нижнем регистре
+                    foundSubCategory = subCat;
+                    break;
+                }
+            }
+            if (foundSubCategory) break;
+            console.log("Ищем категорию:", searchName);
+            console.log("Нашли:", foundSubCategory);
+        }
+
+        setCurrentCategory(foundSubCategory);
+    }, [getCategory, namepath]);
+    const productsInCategory = currentCategory?.products || products || [];
+    console.log(currentCategory);
+
+// Фильтрация
+    const filteredPrice = productsInCategory.filter(product =>
+        Math.floor(product.price / 100) <= price / 100
+    );
+
+    const filteredName = filteredPrice.filter(product =>
+        product.name.toLowerCase().includes(name.toLowerCase())
+    );
+
+    const filtered = filteredName.filter(product =>
+        product.rating === rating
+    );
+    useEffect(() => {
+        localStorage.setItem('found', String(namepath).trim().toLowerCase());
+    }, [namepath])
+
+    return (
         <>
-            <ThemeContext.Provider value={{theme,toggleTheme}}>
+            <ThemeContext.Provider value={{theme, toggleTheme}}>
                 <header className={`header ${theme}`}></header>
                 <main className={`main ${theme}`}>
                     <BasicMenu></BasicMenu>
-                    <div >
+                    <div>
                         {/* Кнопка Каталог з меню */}
                         <Menu shadow="md" width={280} position="bottom-start">
                             <Menu.Target>
@@ -218,7 +279,9 @@ export function ProductPage(){
                     </div>
 
                     <IconUser size={18}/>
-                    <IconHome size={18}/>
+                    <Link to="/" className="goToHome">
+                        <IconHome size={18}/>
+                    </Link>
                     <Button onClick={() => setOpened(true)}
                             className="CartButton">
                         <IconShoppingCart size={24} stroke={1.5}/>
@@ -267,19 +330,24 @@ export function ProductPage(){
                 <section className={`main-content ${theme}`}>
                     <div className={`filter ${theme}`}>
                         <label htmlFor="pname">Назва( по літерам )</label>
-                        <input type="text" name="pname" id="pname" placeholder="Введіть навзу або літеру" value={name} onChange={
-                            (e)=>{setName(e.target.value);}
+                        <input type="text" name="pname" id="pname" placeholder="Введіть навзу або літеру"
+                               value={name} onChange={
+                            (e) => {
+                                setName(e.target.value);
+                            }
                         }/>
                         <label htmlFor="price">Ціна(максимальна) {price}</label>
-                        <input type="range" min="100" max="1000" step="100" id="price" name="price" value={price} onChange={
-                            (e)=>{
-                                setPrice(Number(e.target.value));
-                                console.log(price);
+                        <input type="range" min="100" max="50000" step="100" id="price" name="price" value={price}
+                               onChange={
+                                   (e) => {
+                                       setPrice(Number(e.target.value));
 
-                            }
-                        } />
+                                   }
+                               }/>
                         <label htmlFor="rating">Оцінка</label>
-                        <select name="rating" id="rating" value={rating}  onChange={(e)=>{setRating(Number(e.target.value));}}  >
+                        <select name="rating" id="rating" value={rating} onChange={(e) => {
+                            setRating(Number(e.target.value));
+                        }}>
                             <option value="6">all</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -288,9 +356,12 @@ export function ProductPage(){
                             <option value="5">5</option>
                         </select>
                     </div>
-                    <InfiniteScrollLocal items={rating===6? filteredName : filtered}></InfiniteScrollLocal>
+
+                    <InfiniteScrollLocal items={rating === 6 ? filteredName : filtered}></InfiniteScrollLocal>
+
 
                 </section>
+
             </ThemeContext.Provider>
         </>
 

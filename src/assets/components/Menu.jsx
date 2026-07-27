@@ -1,9 +1,10 @@
 import { Menu, Button } from "@mantine/core";
 import React from "react";
 import { IconHome, IconShoppingCart, IconUser, IconInfoCircle, IconMenu2 } from "@tabler/icons-react";
+import {Link} from "react-router-dom";
 
 const menu = [
-    { option: "Головна", icon: <IconHome size={20} />, action: () => {} },
+    { option: <Link to="/" style={{textDecoration: "none",color:"black"}}> <p>Головна</p> </Link>, icon: <Link to="/" style={{textDecoration: "none",color:"black"}}><IconHome size={20} /></Link>, action: () => {} },
     { option: "Кошик", icon: <IconShoppingCart size={20} />, action: () => {} },
     { option: "Аккаунти", icon: <IconUser size={20} />, action: () => {} },
     {

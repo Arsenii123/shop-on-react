@@ -30,8 +30,8 @@ class Category {
 }
 class SubCategory extends Category {
     products=[];
-    constructor(name,img,...args) {
-       super(name,img);
+    constructor(name,...args) {
+       super(name);
         for(let i of args){
             if(i!==null){
                 this.products.push(i);

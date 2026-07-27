@@ -130,7 +130,6 @@ body {
     height: 26px;
     cursor: pointer;
     transition: transform 0.25s ease;
-    margin-right: 10px;
 
 }
 
@@ -325,8 +324,7 @@ button, .div .div, .main > svg, IconShoppingCart {
     color: black !important;
     cursor: pointer;
     background-color: transparent !important;
-    transition: transform 0.25s ease;
-    margin-right: 4px !important;   /* зменшив відступ */
+    transition: transform 0.25s ease; /* зменшив відступ */
 }
 
 .CartButton:hover svg {
@@ -463,6 +461,10 @@ button, .div .div, .main > svg, IconShoppingCart {
 .info>svg:hover {
     transform: scale(1.3) !important;
 }
+.goToProduct{
+   text-decoration: none;
+}
+
 
 
 
