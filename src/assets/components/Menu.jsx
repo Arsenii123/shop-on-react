@@ -1,24 +1,61 @@
-import { Menu, Button } from "@mantine/core";
-import React from "react";
-import { IconHome, IconShoppingCart, IconUser, IconInfoCircle, IconMenu2 } from "@tabler/icons-react";
+import {Menu, Button, Modal} from "@mantine/core";
+import React, {useState,useEffect} from "react";
+import {IconHome, IconShoppingCart, IconUser, IconInfoCircle, IconMenu2, IconX} from "@tabler/icons-react";
 import {Link} from "react-router-dom";
+import {InfoCategories} from "./homepage.jsx";
+import {useCartItems} from "./Cart.js";
 
-const menu = [
-    { option: <Link to="/" style={{textDecoration: "none",color:"black"}}> <p>Головна</p> </Link>, icon: <Link to="/" style={{textDecoration: "none",color:"black"}}><IconHome size={20} /></Link>, action: () => {} },
-    { option: "Кошик", icon: <IconShoppingCart size={20} />, action: () => {} },
-    { option: "Аккаунти", icon: <IconUser size={20} />, action: () => {} },
-    {
-        option: "Інфо",
-        icon: <IconInfoCircle size={20} />,
-        info: [
-            { name: "Про нас", action: () => {} },
-            { name: "Контакти", action: () => {} },
-        ]
-    }
-];
 
-export default function BasicMenu() {
+
+function Cart({isOpened}){
+    const cart = useCartItems() || [];
+    const [o, setOpened] = useState(false);
+
+    useEffect(() => {
+        setOpened(isOpened);
+    }, [isOpened]);
+
     return (
+        <Modal
+            opened={o}
+            onClose={() => setOpened(false)}
+            title="Кошик"
+            centered
+            overlayProps={{ opacity: 0.4, blur: 2 }}
+            withCloseButton={false}
+        >
+            <Button
+                variant="subtle"
+                color="gray"
+                onClick={() => setOpened(false)}
+                leftSection={<IconX size={20} />}
+            />
+            {cart.map((item, index) => (
+                <InfoCategories key={index} {...item} count={item.count || 1} />
+            ))}
+            <button className="makemodalorder">Зробити замовлення</button>
+        </Modal>
+    );
+}
+export default function BasicMenu() {
+    const [cartOpened, setCartOpened] = useState(false);
+    const menu = [
+        { option: <Link to="/" style={{textDecoration: "none",color:"black"}}> <p>Головна</p> </Link>, icon: <Link to="/" style={{textDecoration: "none",color:"black"}}><IconHome size={20} /></Link>, action: () => {} },
+        { option: "Кошик", icon: <IconShoppingCart size={20} />, action: () =>{
+             setCartOpened(true);
+            }},
+        { option: "Аккаунти", icon: <IconUser size={20} />, action: () => {} },
+        {
+            option: "Інфо",
+            icon: <IconInfoCircle size={20} />,
+            info: [
+                { name: "Про нас", action: () => {} },
+                { name: "Контакти", action: () => {} },
+            ]
+        }
+    ];
+    return (
+        <>
         <Menu
             shadow="md"
             width={340}
@@ -72,5 +109,7 @@ export default function BasicMenu() {
                 })}
             </Menu.Dropdown>
         </Menu>
+    <Cart isOpened={cartOpened} />
+        </>
     );
 }

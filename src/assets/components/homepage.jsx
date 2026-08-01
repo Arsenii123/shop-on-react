@@ -1,6 +1,6 @@
 import {Category, SubCategory} from "./Categorry.js";
 import {Product} from "./Product.js";
-import {useCartItems, addToCart, deleteFromCart, clearCart,updateCart} from "./Cart.js";
+import {useCartItems, addToCart, deleteFromCart, clearCart, updateCart} from "./Cart.js";
 import React, {useState, useEffect, createContext, useContext, useReducer} from "react";
 import {Modal, Button, Group, Menu} from "@mantine/core";
 import BasicMenu from "./Menu.jsx";
@@ -30,11 +30,11 @@ export const nameSlice = createSlice({
     initialState: {nameCategory: ""}, // початковий стан лічильника
     reducers: {
         // функція-редьюсер для дії increment
-        change: (state,newState) => {
+        change: (state, newState) => {
             state.nameCategory = newState
         },
         clear: (state) => {
-            state.nameCategory =""
+            state.nameCategory = ""
         },
     },
 });
@@ -169,7 +169,6 @@ export const category = [
             new Product("Кухонний набір ножів", 1850, 5, 12, "https://picsum.photos/id/152/600/400"),
             new Product("Складний ніж", 650, 4, 30, "https://picsum.photos/id/153/600/400"),
             new Product("Тактичний ніж", 1450, 5, 15, "https://picsum.photos/id/154/600/400")
-
         ),
         new SubCategory("Термопродукція",
 
@@ -178,7 +177,6 @@ export const category = [
             new Product("Термобілизна комплект", 1250, 4, 19, "https://picsum.photos/id/162/600/400"),
             new Product("Термосумка", 950, 4, 22, "https://picsum.photos/id/163/600/400"),
             new Product("Термоконтейнер", 680, 5, 30, "https://picsum.photos/id/164/600/400")
-
         )
     ),
     new Category("Офіс школа книги", 3,
@@ -189,14 +187,12 @@ export const category = [
             new Product("Зошит у клітинку A4", 75, 4, 60, "https://picsum.photos/id/172/600/400"),
             new Product("Зошит у лінію", 45, 4, 90, "https://picsum.photos/id/173/600/400"),
             new Product("Комплект зошитів 10 шт", 320, 5, 40, "https://picsum.photos/id/174/600/400")
-
         ),
         new SubCategory("Папір офісний",
 
             new Product("Папір А4 500 арк.", 280, 5, 55, "https://picsum.photos/id/180/600/400"),
             new Product("Папір А3 250 арк.", 420, 4, 30, "https://picsum.photos/id/181/600/400"),
             new Product("Кольоровий папір", 180, 4, 45, "https://picsum.photos/id/182/600/400")
-
         ),
         new SubCategory("Ручки",
 
@@ -204,14 +200,12 @@ export const category = [
             new Product("Набір ручок 12 шт", 220, 5, 50, "https://picsum.photos/id/191/600/400"),
             new Product("Ручка гелева", 45, 5, 80, "https://picsum.photos/id/192/600/400"),
             new Product("Маркер перманентний", 65, 4, 70, "https://picsum.photos/id/193/600/400")
-
         ),
         new SubCategory("Пенали шкільні",
 
             new Product("Пенал одинарний", 120, 4, 35, "https://picsum.photos/id/200/600/400"),
             new Product("Пенал двосторонній", 180, 5, 28, "https://picsum.photos/id/201/600/400"),
             new Product("Пенал з наповненням", 450, 5, 22, "https://picsum.photos/id/202/600/400")
-
         ),
         new SubCategory("Шкільні набори та ранці",
 
@@ -219,7 +213,6 @@ export const category = [
             new Product("Набір шкільний", 890, 4, 20, "https://picsum.photos/id/211/600/400"),
             new Product("Портфель", 980, 4, 18,
                 "https://picsum.photos/id/212/600/400")
-
         )
     ),
     new Category("Зоотовари", 4,
@@ -398,35 +391,43 @@ function Products(props) {
     return (
         <div className={`card ${theme}`}>
             <div className={"iLove"}>
-                <img src={props.img} alt="photo"/>
+                <Link className="goToOrder" to='/order'>
+                    <img src={props.img} alt="photo"/>
+                </Link>
                 <IconHeart fill={f ? "red" : "grey"} onClick={() => {
                     f ? setF(false) : setF(true)
                 }} className="IconHeart"></IconHeart>
             </div>
-            <h4>{props.name}</h4>
-            <div className="stars">
-                {
-                    r.map((item, index) => {
-                            if (item === 1) {
-                                return (
-                                    <IconStar key={index} fill="yellow"></IconStar>
-                                );
-                            } else {
-                                return (
-                                    <IconStar key={index}></IconStar>
-                                );
+            <Link className="goToOrder" to='/order'>
+                <h4>{props.name}</h4>
+            </Link>
+            <Link className="goToOrder" to='/order'>
+                <div className="stars">
+                    {
+                        r.map((item, index) => {
+                                if (item === 1) {
+                                    return (
+                                        <IconStar key={index} fill="yellow"></IconStar>
+                                    );
+                                } else {
+                                    return (
+                                        <IconStar key={index}></IconStar>
+                                    );
+                                }
                             }
-                        }
-                    )
-                }
-            </div>
-            <div className="info">
-                <div className="amount">
-                    {props.discount > 0 ? (<p>{props.price - (props.price * props.discount / 100)}</p>) : null}
-                    <p>{props.price}</p>
-
-
+                        )
+                    }
                 </div>
+            </Link>
+            <div className="info">
+                <Link className="goToOrder" to='/order'>
+                    <div className="amount">
+                        {props.discount > 0 ? (<p>{props.price - (props.price * props.discount / 100)}</p>) : null}
+                        <p>{props.price}</p>
+
+
+                    </div>
+                </Link>
                 <IconShoppingCart size={18} stroke={1.5} onClick={() => {
                     addToCart(new Product(props.name, props.price, props.rating, props.discount, props.img))
                 }
@@ -435,6 +436,7 @@ function Products(props) {
 
 
         </div>
+
     )
 }
 
@@ -465,11 +467,12 @@ function C(props) {
                     <ul>
                         {currentCategory.categories.map((item, index) => (
 
-                            <Link to={`/product/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={()=>{
-                                dispatch(change(item.name))
-                                localStorage.setItem('found',item.name.trim().toLowerCase());
-                                 }} key={index}>
-                                <li >
+                            <Link to={`/category/${item.name.trim().toLowerCase()}`} className="goToProduct"
+                                  onClick={() => {
+                                      dispatch(change(item.name))
+                                      localStorage.setItem('found', item.name.trim().toLowerCase());
+                                  }} key={index}>
+                                <li>
                                     {item.name}
                                 </li>
                             </Link>
@@ -500,7 +503,6 @@ function Categories() {
 }
 
 
-
 export function InfoCategories(props) {
     const initialState = {
         count: Number(props.count) || 1,
@@ -509,9 +511,9 @@ export function InfoCategories(props) {
     function reducer(state, action) {
         switch (action.type) {
             case 'INCREMENT':
-                return { count: state.count + 1};
+                return {count: state.count + 1};
             case 'DECREMENT':
-                return { count: state.count - 1};
+                return {count: state.count - 1};
             default:
                 return state;
         }
@@ -527,7 +529,7 @@ export function InfoCategories(props) {
     const price = Number(props.price) || 0;
     const discount = Number(props.discount) || 0;
     const finalPrice = price - (price * discount / 100);
-    const total = (finalPrice * state.count).toFixed(0)+'$';
+    const total = (finalPrice * state.count).toFixed(0) + '$';
 
     return (
 
@@ -542,25 +544,27 @@ export function InfoCategories(props) {
                 <IconMinus
                     size={24}
                     stroke={1.5}
-                    onClick={() => (state.count>1 ? dispatch({ type: 'DECREMENT' }) : 0)}
+                    onClick={() => (state.count > 1 ? dispatch({type: 'DECREMENT'}) : 0)}
                     color={state.count > 1 ? 'red' : 'grey'}
-                    style={{ cursor: 'pointer' }}
+                    style={{cursor: 'pointer'}}
                 />
-                <span style={{ fontSize: "18px", fontWeight: "600", minWidth: "30px", textAlign: "center" }}>
+                <span style={{fontSize: "18px", fontWeight: "600", minWidth: "30px", textAlign: "center"}}>
                     {state.count}
                 </span>
                 <IconPlus
                     size={24}
                     stroke={1.5}
-                    onClick={() => (state.count<50 ? dispatch({ type: 'INCREMENT' }) : 0)}
+                    onClick={() => (state.count < 50 ? dispatch({type: 'INCREMENT'}) : 0)}
                     color={state.count < 50 ? 'red' : 'grey'}
-                    style={{ cursor: 'pointer' }}
+                    style={{cursor: 'pointer'}}
                 />
             </div>
-            <p style={{ fontWeight: "700", fontSize: "17px" }}>
+            <p style={{fontWeight: "700", fontSize: "17px"}}>
                 {total}
             </p>
-            <IconX style={{cursor:'pointer'}} onClick={()=>{deleteFromCart(props.name)}}></IconX>
+            <IconX style={{cursor: 'pointer'}} onClick={() => {
+                deleteFromCart(props.name)
+            }}></IconX>
         </div>
 
 
@@ -571,6 +575,8 @@ function Homepage() {
     const [theme, setTheme] = useState('light');
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
+    const [search, setSearch] = useState("");
+    const [searchedCategory, setSearchedCategory] = useState('');
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     };
@@ -580,13 +586,39 @@ function Homepage() {
             localStorage.setItem("isCart", String(item.isCart));
         })
     }, [cart])
+    useEffect(() => {
+        cart.map(item => {
+            item.isCart = true;
+            localStorage.setItem("isCart", String(item.isCart));
+        })
+    }, [cart])
+    useEffect(() => {
+        const n = search.trim().toLowerCase();
+        let foundCategory = "error";
+
+        for (const cat of category) {
+            for (const sub of cat.categories) {
+                for (const product of sub.products || []) {
+                    if (product.name.trim().toLowerCase().includes(n)) {
+                        foundCategory = sub.name.trim().toLowerCase();
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        localStorage.setItem("found", foundCategory.trim().toLowerCase());
+
+        setSearchedCategory(foundCategory);
+    }, [search]);
     return (
         <>
             <ThemeContext.Provider value={{theme, toggleTheme}}>
                 <header className={`header ${theme}`}></header>
                 <main className={`main ${theme}`}>
                     <BasicMenu></BasicMenu>
-                    <div >
+                    <div>
                         {/* Кнопка Каталог з меню */}
                         <Menu shadow="md" width={280} position="bottom-start">
                             <Menu.Target>
@@ -594,7 +626,7 @@ function Homepage() {
                                     variant="filled"
                                     color="red"
                                     leftSection={<IconApps size={24} stroke={1.5}/>
-                                     }
+                                    }
                                     className="showgroups"
                                 >
                                     Каталог
@@ -609,15 +641,20 @@ function Homepage() {
                     </div>
                     <div className="search-container">
                         <IconSearch size={24} stroke={1.5}/>
-                        <input type="text" placeholder="Я шукаю"/>
-                        <button>Знайти</button>
+                        <input type="text" placeholder="Я шукаю" value={search}
+                               onChange={(e) => String(setSearch(e.target.value))}/>
+                        <Link className="goToHome" to={`/category/${searchedCategory.trim().toLowerCase()}`}
+                              onClick={() => localStorage.setItem("searchName", search.trim().toLowerCase())}>
+                            <button>Знайти</button>
+                        </Link>
+
 
                     </div>
 
                     <IconUser size={18}/>
 
                     <Button onClick={() => setOpened(true)}
-                             className="CartButton">
+                            className="CartButton">
                         <IconShoppingCart size={24} stroke={1.5}/>
                     </Button>
                     <Modal
@@ -663,7 +700,7 @@ function Homepage() {
                 </main>
                 <section className={`app ${theme}`}>
                     <div>
-                            <Categories/>
+                        <Categories/>
 
                     </div>
                     <div>
@@ -672,6 +709,7 @@ function Homepage() {
                                 <div key={index}><Products img={item.img} name={item.name} price={item.price}
                                                            discount={item.discount} rating={item.rating}></Products>
                                 </div>
+
 
                             ))
                         }

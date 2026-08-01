@@ -6,7 +6,7 @@ import {Modal, Button, Group, Menu} from "@mantine/core";
 import BasicMenu from "./Menu.jsx";
 import {category, products, iconMap, change, store, nameSlice} from "./homepage.jsx";
 import {InfoCategories} from "./homepage.jsx";
-import './styles/productpage.css'
+import './styles/categorypage.css'
 import {useParams} from 'react-router-dom';
 import {
     IconApps, IconSearch, IconHome, IconShoppingCart, IconUser, IconShirt,
@@ -28,7 +28,7 @@ const ThemeContext = createContext();
 import {useSelector, useDispatch} from 'react-redux'
 import {Link} from "react-router-dom";
 
-export function C(props) {
+function C(props) {
     const [name, setName] = useState(props.name);
     const [show, setShow] = useState(true);
     const dispatch = useDispatch();
@@ -54,7 +54,7 @@ export function C(props) {
                     </h3>
                     <ul>
                         {currentCategory.categories.map((item, index) => (
-                            <Link to={`/product/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={() => {
+                            <Link to={`/category/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={() => {
                                 dispatch(change(item.name))
                                 localStorage.setItem('found', item.name.trim().toLowerCase());
                             }} key={index}>
@@ -72,7 +72,7 @@ export function C(props) {
     );
 }
 
-export function Categories() {
+function Categories() {
     const {theme} = useContext(ThemeContext);
     return (
         <div className={`div ${theme}`}>
@@ -141,35 +141,43 @@ export function Products(props) {
     return (
         <div className={`card ${theme}`}>
             <div className={"iLove"}>
-                <img src={props.img} alt="photo"/>
+                <Link className="goToOrder" to='/order'>
+                    <img src={props.img} alt="photo"/>
+                </Link>
                 <IconHeart fill={f ? "red" : "grey"} onClick={() => {
                     f ? setF(false) : setF(true)
                 }} className="IconHeart"></IconHeart>
             </div>
-            <h4>{props.name}</h4>
-            <div className="stars">
-                {
-                    r.map((item, index) => {
-                            if (item === 1) {
-                                return (
-                                    <IconStar key={index} fill="yellow"></IconStar>
-                                );
-                            } else {
-                                return (
-                                    <IconStar key={index}></IconStar>
-                                );
+            <Link className="goToOrder" to='/order'>
+                <h4>{props.name}</h4>
+            </Link>
+            <Link className="goToOrder" to='/order'>
+                <div className="stars">
+                    {
+                        r.map((item, index) => {
+                                if (item === 1) {
+                                    return (
+                                        <IconStar key={index} fill="yellow"></IconStar>
+                                    );
+                                } else {
+                                    return (
+                                        <IconStar key={index}></IconStar>
+                                    );
+                                }
                             }
-                        }
-                    )
-                }
-            </div>
-            <div className="info">
-                <div className="amount">
-                    {props.discount > 0 ? (<p>{props.price - (props.price * props.discount / 100)}</p>) : null}
-                    <p>{props.price}</p>
-
-
+                        )
+                    }
                 </div>
+            </Link>
+            <div className="info">
+                <Link className="goToOrder" to='/order'>
+                    <div className="amount">
+                        {props.discount > 0 ? (<p>{props.price - (props.price * props.discount / 100)}</p>) : null}
+                        <p>{props.price}</p>
+
+
+                    </div>
+                </Link>
                 <IconShoppingCart size={18} stroke={1.5} onClick={() => {
                     addToCart(new Product(props.name, props.price, props.rating, props.discount, props.img))
                 }
@@ -193,7 +201,8 @@ export function ProductPage() {
     const [name, setName] = useState("");
     const [rating, setRating] = useState(6);
     const [currentCategory, setCurrentCategory] = useState(null); // лучше null, а не []
-
+    const[search, setSearch] = useState("");
+    const [searchedCategory, setSearchedCategory] = useState('');
     const getCategory = useSelector((state) => state.nameCategory?.payload || state.name?.payload || "");
     useEffect(() => {
         let rawName = namepath || getCategory || localStorage.getItem('found') || "";
@@ -207,7 +216,10 @@ export function ProductPage() {
         console.log(localStorage.getItem('found'))// ← приведи к нижнему регистру
 
         let foundSubCategory = null;
-
+        if(localStorage.getItem('searchName')!=="" )
+        {
+            setName(localStorage.getItem('searchName'));
+        }
 
         for (let i = 0; i < category.length; i++) {
             for (let j = 0; j < category[i].categories.length; j++) {
@@ -219,14 +231,38 @@ export function ProductPage() {
                 }
             }
             if (foundSubCategory) break;
-            console.log("Ищем категорию:", searchName);
-            console.log("Нашли:", foundSubCategory);
         }
 
         setCurrentCategory(foundSubCategory);
+        localStorage.setItem('searchName',"");
     }, [getCategory, namepath]);
+    useEffect(() => {
+        cart.map(item => {
+            item.isCart = true;
+            localStorage.setItem("isCart", String(item.isCart));
+        })
+    }, [cart])
+    useEffect(()=>{
+        const n = search.trim().toLowerCase();
+        let foundCategory = "error";
+
+        for (const cat of category) {
+            for (const sub of cat.categories) {
+                for (const product of sub.products || []) {
+                    if (product.name.trim().toLowerCase().includes(n)) {
+                        foundCategory = sub.name.trim().toLowerCase();
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        localStorage.setItem("found", foundCategory.trim().toLowerCase());
+
+        setSearchedCategory(foundCategory);
+    },[search]);
     const productsInCategory = currentCategory?.products || products || [];
-    console.log(currentCategory);
 
 // Фильтрация
     const filteredPrice = productsInCategory.filter(product =>
@@ -273,8 +309,11 @@ export function ProductPage() {
                     </div>
                     <div className="search-container">
                         <IconSearch size={24} stroke={1.5}/>
-                        <input type="text" placeholder="Я шукаю"/>
-                        <button>Знайти</button>
+                        <input type="text" placeholder="Я шукаю"  value={search} onChange={(e)=>String(setSearch(e.target.value))}/>
+                        <Link className="goToHome" to={`/category/${searchedCategory.trim().toLowerCase()}`} onClick={()=>localStorage.setItem("searchName", search.trim().toLowerCase())}>
+                            <button>Знайти</button>
+                        </Link>
+
 
                     </div>
 

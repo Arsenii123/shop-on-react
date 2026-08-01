@@ -1,7 +1,62 @@
-/* ====================== homepage.css ====================== */
+/* ====================== ФІЛЬТР ====================== */
+.filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.filter:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.filter > div {
+    flex: 1;
+    min-width: 220px;
+}
+
+.filter label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 14px;
+}
+
+/* Інпути, селекти, ползунок */
+.filter input[type="text"],
+.filter select,
+.filter input[type="range"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text);
+    transition: all 0.25s ease;
+}
+
+.filter input[type="text"]:focus,
+.filter select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(246, 45, 31, 0.15);
+}
+
+.filter input[type="range"] {
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+/* ====================== GLOBAL ====================== */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -32,8 +87,8 @@ body {
     --header-bg: #1a1a1a;
 }
 
-/* ====================== HEADER ====================== */
-.header, .main, .app, .footer {
+/* ====================== HEADER & MAIN ====================== */
+.header, .main, .app, .footer, .main-content {
     background-color: var(--bg);
     color: var(--text);
 }
@@ -47,7 +102,6 @@ body {
     z-index: 1000;
 }
 
-/* ====================== MAIN ====================== */
 .main {
     max-width: 1400px;
     margin: 0 auto;
@@ -59,7 +113,8 @@ body {
 }
 
 /* Кнопка Каталог */
-.main > .m-button{
+.m-button,
+.showgroups {
     background: #f42d1f !important;
     color: white !important;
     border: none !important;
@@ -71,11 +126,7 @@ body {
     gap: 8px;
 }
 
-.m-button {
-    background: #e02a1b !important;
-}
-
-/* Блок пошуку (з новим класом) */
+/* Пошук */
 .search-container {
     flex: 1;
     min-width: 300px;
@@ -93,13 +144,11 @@ body {
     box-shadow: 0 0 0 3px rgba(246, 45, 31, 0.15);
 }
 
-/* Лупа */
 .search-container svg:first-child {
     margin-left: 14px;
     color: var(--text-secondary);
 }
 
-/* Поле вводу */
 .search-container input {
     flex: 1;
     padding: 13px 10px;
@@ -110,7 +159,6 @@ body {
     outline: none;
 }
 
-/* Кнопка "Знайти" */
 .search-container button {
     background: #f62d1f;
     color: white;
@@ -124,20 +172,20 @@ body {
     background: #e02a1b;
 }
 
-/* Іконки справа */
+/* Іконки в хедері */
 .main > svg {
     width: 26px;
     height: 26px;
     cursor: pointer;
     transition: transform 0.25s ease;
-
+    margin-right: 10px;
 }
 
 .main > svg:hover {
     transform: scale(1.22);
 }
 
-/* ====================== APP ====================== */
+/* ====================== APP (sidebar + контент) ====================== */
 .app {
     max-width: 1400px;
     margin: 20px auto;
@@ -163,7 +211,7 @@ body {
     min-width: 0;
 }
 
-/* Категорії */
+/* Категорії в сайдбарі */
 .div {
     display: flex;
     flex-direction: column;
@@ -222,7 +270,6 @@ body {
     border-color: var(--accent);
 }
 
-/* Зображення */
 .iLove {
     position: relative;
     height: 200px;
@@ -233,12 +280,15 @@ body {
     border-bottom: 1px solid var(--border);
 }
 
+.dark .iLove {
+    background: #2a2a2a;
+}
+
 .iLove img {
     max-height: 160px;
     object-fit: contain;
 }
 
-/* Серце */
 .IconHeart {
     position: absolute;
     top: 12px;
@@ -247,7 +297,7 @@ body {
     z-index: 10;
 }
 
-/* Назва */
+/* Назва товару */
 .card h4 {
     padding: 12px 14px 8px;
     font-size: 14.8px;
@@ -270,7 +320,11 @@ body {
     stroke: none !important;
 }
 
-/* Ціна + Кошик */
+.dark .stars svg {
+    fill: #ffcc33 !important;
+}
+
+/* Ціна + кошик */
 .info {
     padding: 10px 14px 14px;
     display: flex;
@@ -296,84 +350,38 @@ body {
     text-decoration: line-through;
 }
 
-/* Сітка */
-.app > div:last-child {
+/* Сітка товарів */
+.app > div:last-child,
+.listProducts {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
     gap: 20px;
+    padding: 46px;
 }
 
-/* Темна тема */
-.dark .iLove {
-    background: #2a2a2a;
-}
-
-.dark .stars svg {
-    fill: #ffcc33 !important;
-}
-
-/* Анімації */
-button, .div .div, .main > svg, IconShoppingCart {
-    transition: all 0.25s ease;
-}
-
-
-/* ====================== ІКОНКА КОШИКА ====================== */
+/* ====================== КОШИК (Modal) ====================== */
 .CartButton,
 .CartButton svg {
     color: black !important;
     cursor: pointer;
     background-color: transparent !important;
-    transition: transform 0.25s ease; /* зменшив відступ */
+    transition: transform 0.25s ease;
+}
+
+.dark .CartButton svg {
+    color: #ddd !important;
 }
 
 .CartButton:hover svg {
     transform: scale(1.22);
 }
 
-/* Темна тема */
-.dark .CartButton svg {
-    color: #ddd !important;
-}
 .mantine-Modal-content {
     border-radius: 16px !important;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25) !important;
-    max-width: 520px !important;
-    margin-right: 112% !important;   /* приблизно по центру */
+    max-width: 1020px !important;
     position: relative !important;
-}
-
-/* Для різних розмірів */
-@media (max-width: 1400px) {
-    .mantine-Modal-content {
-        margin-left:2% !important;
-    }
-}
-
-@media (max-width: 1200px) {
-    .mantine-Modal-content {
-        margin-left: 8% !important;
-    }
-}
-
-@media (max-width: 992px) {
-    .mantine-Modal-content {
-        margin-left: 6% !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .mantine-Modal-content {
-        margin-left: 5% !important;
-        max-width: 90% !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .mantine-Modal-content {
-        margin-left: 2% !important;
-        max-width: 96% !important;
-    }
+    margin-left: 110% !important;
 }
 
 .mantine-Modal-header {
@@ -402,42 +410,11 @@ button, .div .div, .main > svg, IconShoppingCart {
 }
 
 .infoincart img {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
 }
 
-.a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-left: auto;
-}
-
-/* Анімації + і - */
-.infoincart> svg {
-    transition: transform 0.2s ease !important;
-}
-.a> svg {
-    transition: transform 0.2s ease !important;
-}
-.infoincart> svg:hover {
-    transform: scale(1.3) !important;
-}
-.a> svg:hover {
-    transform: scale(1.3) !important;
-}
-
-/* Анімація хрестика */
-.mantine-Modal-close {
-    transition: transform 0.3s ease !important;
-}
-
-.mantine-Modal-close:hover {
-    transform: rotate(90deg) !important;
-}
-
-/* Стиль кнопки "Зробити замовлення" */
 .makemodalorder {
     background: #f62d1f !important;
     color: white !important;
@@ -454,23 +431,63 @@ button, .div .div, .main > svg, IconShoppingCart {
     background: #e02a1b !important;
     transform: translateY(-1px) !important;
 }
-.info>svg{
-    cursor: pointer;
-    transition: transform 0.25s ease !important;
+
+/* Анімації */
+button, .div .div, .main > svg, .card, .IconHeart, .info > svg {
+    transition: all 0.25s ease;
 }
-.info>svg:hover {
+
+.info > svg:hover,
+.infoincart > svg:hover,
+.a > svg:hover {
     transform: scale(1.3) !important;
 }
-.goToProduct{
-   text-decoration: none;
+
+/* ====================== АДАПТИВНІСТЬ ====================== */
+@media (max-width: 1200px) {
+    .filter { gap: 16px; }
+    .filter > div { min-width: 200px; }
 }
-.goToOrder{
+
+@media (max-width: 992px) {
+    .filter { flex-wrap: wrap; }
+}
+
+@media (max-width: 768px) {
+    .filter {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+        position: static;
+    }
+    .main { padding: 12px 15px; }
+}
+
+@media (max-width: 480px) {
+    .filter > div { min-width: 100%; }
+    .search-container { min-width: 100%; }
+}
+.goToHome{
     text-decoration: none;
+    color:inherit;
 }
-
-
-
-
-
-
-
+.goToHome:hover, .goToHome:active, .goToHome:focus, .goToHome:visited{
+    text-decoration: none;
+    color:inherit;
+}
+.goToHome>svg{
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+    margin-top:3px;
+}
+.goToHome:hover>svg{
+    transform: scale(1.22);
+}
+/* Для модального вікна кошика */
+@media (max-width: 1400px) { .mantine-Modal-content { margin-left: 2% !important; } }
+@media (max-width: 1200px) { .mantine-Modal-content { margin-left: 8% !important; } }
+@media (max-width: 992px)  { .mantine-Modal-content { margin-left: 6% !important; } }
+@media (max-width: 768px)  { .mantine-Modal-content { margin-left: 5% !important; max-width: 90% !important; } }
+@media (max-width: 480px)  { .mantine-Modal-content { margin-left: 2% !important; max-width: 96% !important; } }
