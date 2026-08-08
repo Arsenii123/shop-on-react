@@ -1,5 +1,4 @@
 import {Product} from './Product.js';
-import {IconApps}  from '@tabler/icons-react';
 import Dexie from 'dexie';
 import { useLiveQuery } from 'dexie-react-hooks';
 class Category {
@@ -38,9 +37,6 @@ class SubCategory extends Category {
             }
 
         }
-        for(let i of this.products){
-            addToCategory(i,this.name);
-        }
     }
     addProduct(product){
         if(product instanceof Product){
@@ -57,7 +53,7 @@ class SubCategory extends Category {
     }
 }
 
-const database = new Dexie('CategoryList');
+ const database = new Dexie('CategoryList');
 database.version(1).stores({
     items: '++id, name, price, rating, discount, img, category'
 });
@@ -70,16 +66,21 @@ export async function addToCategory(product,name) {
     if (!product || !product.name) return;
 
     const existing = await database.items
-        .filter(a =>
-            a.name === product.name &&
-            a.price === product.price &&
-            a.discount === product.discount &&
-            a.img === product.img &&
-            a.rating === product.rating
-        );
+        .where('name')
+        .equals(product.name)
+        .and(prod =>
+            prod.img === product.img &&
+            prod.price === product.price &&
+            prod.discount === product.discount &&
+            prod.rating === product.rating
+        )
+        .first();
 
 
-    if (existing[0] ) {
+
+
+
+    if (existing) {
         return null;
 
     } else {
@@ -94,32 +95,31 @@ export async function addToCategory(product,name) {
         });
     }
 }
-//-дописать
-export async function updateCategory(product) {
-    if (!product) return;
-    const existing = await database.items.where('name').equals(name).first();
-    if (existing) {
-        await database.items.update(existing.id, { count: Number(newCount) });
-    }
-}
+
 
 export async function deleteFromCategory(product) {
     const existing = await database.items
-        .filter(i =>
-            i.name === product.name &&
-            i.price === product.price &&
-            i.discount === product.discount &&
-            i.img === product.img &&
-            i.rating === product.rating
+        .where('name')
+        .equals(product.name)
+        .and(prod =>
+            prod.img === product.img &&
+            prod.price === product.price &&
+            prod.discount === product.discount &&
+            prod.rating === product.rating
         )
+        .first();
+
+
 
     if (existing) {
-        await database.items.delete(existing[0].id);
+        await database.items.delete(existing.id);
     }
 
 
 }
-
+export async function Clears(){
+    await database.items.clear();
+}
 
 
 

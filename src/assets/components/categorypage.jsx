@@ -1,13 +1,14 @@
-import {Category, SubCategory} from "./Categorry.js";
+import {Category, SubCategory,Clears} from "./Categorry.js";
 import {Product} from "./Product.js";
 import {useCartItems, addToCart, deleteFromCart, clearCart, updateCart} from "./Cart.js";
 import React, {useState, useEffect, createContext, useContext, useReducer, useRef, use} from "react";
 import {Modal, Button, Group, Menu} from "@mantine/core";
 import BasicMenu from "./Menu.jsx";
-import {category, products, iconMap, change, store, nameSlice} from "./homepage.jsx";
+import {category, products, iconMap, change, store, nameSlice,orders} from "./homepage.jsx";
 import {InfoCategories} from "./homepage.jsx";
 import './styles/categorypage.css'
 import {useParams} from 'react-router-dom';
+import{useCategoryItems} from './Categorry.js';
 import {
     IconApps, IconSearch, IconHome, IconShoppingCart, IconUser, IconShirt,
     IconBike,
@@ -122,7 +123,9 @@ function InfiniteScrollLocal(props) {
     return (
         <div className={'listProducts'}>
             {visibleItems.map((item, idx) => (
-                <div key={idx}><Products img={item.img} name={item.name} price={item.price}
+                <div key={idx} onClick={()=>{
+                    orders.push(new Product(item.name,item.price,item.rating,item.discount,item.img));
+                }}><Products img={item.img} name={item.name} price={item.price}
                                          discount={item.discount} rating={item.rating}></Products>
                 </div>
             ))}
@@ -204,9 +207,30 @@ export function ProductPage() {
     const[search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
     const getCategory = useSelector((state) => state.nameCategory?.payload || state.name?.payload || "");
+    const adminArray=useCategoryItems() || [];
+    if(adminArray!==undefined){
+        console.log(adminArray);
+        for (let i = 0; i < category.length; i++) {
+            for (let j = 0; j < category[i].categories.length; j++) {
+                const subCat = category[i].categories[j];
+
+                for (const l of adminArray) {
+                    if (l.category.trim().toLowerCase() === subCat.name.trim().toLowerCase()) {
+                        const p = new Product(l.name, l.price, l.rating, l.discount, l.img);
+
+                        // Проверяем, есть ли уже такой товар
+                        const exists = subCat.products.some(prod => prod.name === p.name);
+                        if (!exists) {
+                            subCat.products.push(p);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
     useEffect(() => {
         let rawName = namepath || getCategory || localStorage.getItem('found') || "";
-
         if (!rawName) {
             setCurrentCategory(null);
             return;
@@ -220,6 +244,7 @@ export function ProductPage() {
         {
             setName(localStorage.getItem('searchName'));
         }
+
 
         for (let i = 0; i < category.length; i++) {
             for (let j = 0; j < category[i].categories.length; j++) {
@@ -280,6 +305,10 @@ export function ProductPage() {
         localStorage.setItem('found', String(namepath).trim().toLowerCase());
     }, [namepath])
 
+
+
+
+
     return (
         <>
             <ThemeContext.Provider value={{theme, toggleTheme}}>
@@ -317,7 +346,10 @@ export function ProductPage() {
 
                     </div>
 
-                    <IconUser size={18}/>
+                    <Link to="/account" className="goToAccount">
+                        <IconUser size={18}/>
+                    </Link>
+
                     <Link to="/" className="goToHome">
                         <IconHome size={18}/>
                     </Link>

@@ -44,7 +44,7 @@ export default function BasicMenu() {
         { option: "Кошик", icon: <IconShoppingCart size={20} />, action: () =>{
              setCartOpened(true);
             }},
-        { option: "Аккаунти", icon: <IconUser size={20} />, action: () => {} },
+        { option: <Link to="/account" style={{textDecoration: "none",color:"black"}}> <p>Аккаунти</p> </Link>, icon: <IconUser size={20} /> , action: () => {} },
         {
             option: "Інфо",
             icon: <IconInfoCircle size={20} />,

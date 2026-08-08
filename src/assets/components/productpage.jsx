@@ -2,12 +2,13 @@ import BasicMenu from "./Menu.jsx";
 import {Button, Menu, Modal} from "@mantine/core";
 import {IconApps, IconHome, IconSearch, IconSettings, IconShoppingCart, IconUser, IconX} from "@tabler/icons-react";
 import {Link} from "react-router-dom";
-import {category, change, iconMap, InfoCategories} from "./homepage.jsx";
+import {category, change, iconMap, InfoCategories,orders} from "./homepage.jsx";
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useCartItems} from "./Cart.js";
 import {useForm} from 'react-hook-form';
 import './styles/productpage.css'
+import {Orders} from "./Orders.js";
 
 const ThemeContext = createContext();
 const form = {
@@ -16,7 +17,7 @@ const form = {
     address: '',
     city: '',
     state: '',
-    quantity: [],
+    quantityp: '',
     dob: '',
     moreQuantity: '',
     cardNumber: ''
@@ -48,7 +49,7 @@ export function C(props) {
                     </h3>
                     <ul>
                         {currentCategory.categories.map((item, index) => (
-                            <Link to={`/product/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={() => {
+                            <Link to={`/category/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={() => {
                                 dispatch(change(item.name))
                                 localStorage.setItem('found', item.name.trim().toLowerCase());
                             }} key={index}>
@@ -124,14 +125,6 @@ function OrderPage() {
     const onSubmit = async (data) => {
 
         try {
-            const formData = new FormData();
-            Object.entries(data).forEach(([key, value]) => {
-                if (key === 'quantity') {
-                    value.forEach(lang => formData.append('quantity', lang));
-                } else {
-                    formData.append(key, value);
-                }
-            });
             const apiUrl = import.meta.env.VITE_API_URL;
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -143,12 +136,21 @@ function OrderPage() {
                     p: data.password,
                     a: data.address,
                     c: data.city,
-                    n: data.cardNumber
+                    s: data.state,
+                    d: data.dob,
+                    cN: data.cardNumber
                 }), // перетворення даних форми в JSON-рядок
             });
             if (response.ok) {
                 console.log('статус відповіді:', response.status);
                 console.log('надійслані дані:', data);
+                for(let i =0; i < orders.length; i++) {
+                    const o=new Orders(orders[i]);
+                    o.prepareOrder(data.email,data.password,data.city,data.address,data.state,data.dob,data.cardNumber);
+                    console.log(o);
+                    o.makeOrder()
+
+                }
                 alert('Дані успішно надіслано!');
                 reset(form);
             } else {
@@ -203,7 +205,10 @@ function OrderPage() {
 
                         </div>
 
-                        <IconUser size={18}/>
+                        <Link to="/account" className="goToAccount">
+                            <IconUser size={18}/>
+                        </Link>
+
                         <Link to="/" className="goToHome">
                             <IconHome size={18}/>
                         </Link>
@@ -263,6 +268,7 @@ function OrderPage() {
                                    name="email"
                                    placeholder="Print your email address..."
                                    {...register('email', {
+                                       required: 'Пошта обов\'язкова',
                                        pattern: {
                                            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                                            message: 'Некоректний формат електронної пошти'
@@ -307,10 +313,11 @@ function OrderPage() {
                                    id="city"
                                    name="city"
                                    placeholder="Enter your city..."
-                                   required
+                                   {...register('city', {required: 'Введіть назву міста'})}
 
 
                             />
+                            {errors.city && <p className="incorrect">{errors.city.message}</p>}
                             <label htmlFor="male">
                                 <input
                                     type="radio"
@@ -355,9 +362,10 @@ function OrderPage() {
                             <label htmlFor="quantity">Quantity:</label>
 
                             <select id="quantity" name="quantity" size="1" value={quantity} onChange={(e) => {
-                                Number(setQuantity(e.target.value))
+                                setQuantity(e.target.value)
+
                             }}>
-                                <option defaultValue>1</option>
+                                <option defaultValue="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>

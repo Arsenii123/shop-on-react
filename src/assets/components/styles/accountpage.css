@@ -1,0 +1,132 @@
+/* ====================== ACCOUNT PAGE (новое) ====================== */
+
+/* ===== Светлая тема — блок аккаунта ===== */
+.accountInfolight {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.accountInfolight p {
+    margin: 0;
+    font-size: 15px;
+    color: #221f1f;
+    font-weight: 500;
+}
+
+.accountInfolight p span,
+.accountInfolight p {
+    word-break: break-all;
+}
+
+/* ===== Тёмная тема — блок аккаунта ===== */
+.accountInfodark {
+    background: #1e1e1e;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.accountInfodark p {
+    margin: 0;
+    font-size: 15px;
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+/* ===== Кнопка Change account ===== */
+.change {
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-top: 12px;
+    background-color: transparent;
+    color: #797979;
+    border: 1px solid #cfcfcf;
+}
+
+.change:hover {
+    border-color: #f62d1f;
+    color: #f62d1f;
+    background-color: rgba(246, 45, 31, 0.04);
+    transform: translateY(-1px);
+}
+
+/* Тёмная тема для Change */
+.accountInfodark .change {
+    color: #aaaaaa;
+    border: 1px solid #555555;
+}
+
+.accountInfodark .change:hover {
+    border-color: #f42d1f;
+    color: #f42d1f;
+    background-color: rgba(244, 45, 31, 0.1);
+}
+
+/* ===== Кнопка Admin panel ===== */
+.Admin {
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-top: 12px;
+    border: none;
+    background-color: #f62d1f;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(246, 45, 31, 0.25);
+}
+
+.Admin:hover {
+    background-color: #e02a1b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(246, 45, 31, 0.35);
+}
+
+.Admin:active {
+    transform: translateY(0);
+}
+
+/* Тёмная тема для Admin */
+.accountInfodark .Admin {
+    background-color: #f42d1f;
+    box-shadow: 0 2px 8px rgba(244, 45, 31, 0.3);
+}
+
+.accountInfodark .Admin:hover {
+    background-color: #e02a1b;
+    box-shadow: 0 6px 16px rgba(244, 45, 31, 0.4);
+}
+
+/* ===== Адаптив для аккаунта ===== */
+@media (max-width: 768px) {
+    .accountInfolight,
+    .accountInfodark {
+        padding: 24px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .accountInfolight,
+    .accountInfodark {
+        padding: 20px 16px;
+    }
+}

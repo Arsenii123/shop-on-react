@@ -7,6 +7,8 @@ import {ProductPage} from "./assets/components/categorypage.jsx";
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import OrderPage from "./assets/components/productpage.jsx";
+import AccountPage from "./assets/components/accountpage.jsx";
+import AdminPage from "./assets/components/adminpanel.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
@@ -22,8 +24,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/order" element={
                         <OrderPage></OrderPage>
                     } />
+                    <Route path="/account" element={<AccountPage></AccountPage>}/>
+                    <Route path="/admin" element={<AdminPage></AdminPage>}/>
+
                 </Routes>
         </BrowserRouter>
+
 
         </Provider>
     </MantineProvider>

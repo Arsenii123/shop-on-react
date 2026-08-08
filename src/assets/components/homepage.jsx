@@ -1,4 +1,4 @@
-import {Category, SubCategory} from "./Categorry.js";
+import {Category, SubCategory, useCategoryItems, Clears} from "./Categorry.js";
 import {Product} from "./Product.js";
 import {useCartItems, addToCart, deleteFromCart, clearCart, updateCart} from "./Cart.js";
 import React, {useState, useEffect, createContext, useContext, useReducer} from "react";
@@ -380,7 +380,7 @@ export const iconMap = {
     6: <IconGardenCart/>,
     7: <IconDeviceMobile/>
 };
-
+export const orders=[];
 function Products(props) {
     const {theme} = useContext(ThemeContext);
     const [f, setF] = useState(false);
@@ -388,11 +388,12 @@ function Products(props) {
     for (let i = 0; i < props.rating; i++) {
         r.push(1)
     }
+
     return (
         <div className={`card ${theme}`}>
             <div className={"iLove"}>
                 <Link className="goToOrder" to='/order'>
-                    <img src={props.img} alt="photo"/>
+                    <img src={props.img} alt="photo" />
                 </Link>
                 <IconHeart fill={f ? "red" : "grey"} onClick={() => {
                     f ? setF(false) : setF(true)
@@ -650,8 +651,10 @@ function Homepage() {
 
 
                     </div>
+                    <Link to="/account" className="goToHome">
+                        <IconUser size={18}/>
+                    </Link>
 
-                    <IconUser size={18}/>
 
                     <Button onClick={() => setOpened(true)}
                             className="CartButton">
@@ -706,7 +709,9 @@ function Homepage() {
                     <div>
                         {
                             products.map((item, index) => (
-                                <div key={index}><Products img={item.img} name={item.name} price={item.price}
+                                <div key={index} onClick={()=>{
+                                    orders.push(new Product(item.name,item.price,item.rating,item.discount,item.img));
+                                }}><Products img={item.img} name={item.name} price={item.price}
                                                            discount={item.discount} rating={item.rating}></Products>
                                 </div>
 

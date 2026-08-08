@@ -78,7 +78,7 @@ body {
 /* Блок пошуку (з новим класом) */
 .search-container {
     flex: 1;
-    min-width: 300px;
+    min-width: 300px ;
     display: flex;
     align-items: center;
     background: var(--card-bg);

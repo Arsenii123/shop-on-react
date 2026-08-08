@@ -1,0 +1,229 @@
+/* ========== Admin Panel ========== */
+
+header {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 20px 24px 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+    color: #1e293b;
+}
+
+main {
+    margin: 0 24px 20px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+main a {
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+main a:hover {
+    text-decoration: underline;
+}
+
+/* Кнопка Homepage */
+.goTOHomePage {
+    display: inline-flex;
+    align-items: center;
+    margin: 24px;
+    padding: 10px 18px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.goTOHomePage:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* ===== Общие стили для всех таблиц ===== */
+#products,
+#orders,
+#categories {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    margin: 0 24px 40px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+#products > h2,
+#orders > h2,
+#categories > h2 {
+    margin: 0;
+    padding: 14px 12px;
+    background: #f1f5f9;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#products > ol,
+#orders > ol,
+#categories > ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+#products > ol li,
+#orders > ol li,
+#categories > ol li {
+    padding: 11px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    word-break: break-word;
+}
+
+#products > ol li:nth-child(even),
+#orders > ol li:nth-child(even),
+#categories > ol li:nth-child(even) {
+    background: #fafafa;
+}
+
+#products > ol li:hover,
+#orders > ol li:hover,
+#categories > ol li:hover {
+    background: #fef2f2;
+}
+
+#products input {
+    width: 100%;
+    padding: 11px 12px;
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    font-size: 13px;
+    outline: none;
+    background: #f8fafc;
+    box-sizing: border-box;
+}
+
+#products input:focus {
+    background: #fef2f2;
+}
+
+#products input::placeholder {
+    color: #94a3b8;
+}
+
+/* ===== PRODUCTS (7 столбцов) ===== */
+#products {
+    grid-template-columns: 70px 1.6fr 1.3fr 100px 90px 90px 1.4fr;
+}
+
+#products > h2:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+#products > h2:nth-of-type(2) { grid-column: 2; grid-row: 1; }
+#products > h2:nth-of-type(3) { grid-column: 3; grid-row: 1; }
+#products > h2:nth-of-type(4) { grid-column: 4; grid-row: 1; }
+#products > h2:nth-of-type(5) { grid-column: 5; grid-row: 1; }
+#products > h2:nth-of-type(6) { grid-column: 6; grid-row: 1; }
+#products > h2:nth-of-type(7) { grid-column: 7; grid-row: 1; border-right: none; }
+
+#products > ol:nth-of-type(1) { grid-column: 1; grid-row: 2; }
+#products > ol:nth-of-type(2) { grid-column: 2; grid-row: 2; }
+#products > ol:nth-of-type(3) { grid-column: 3; grid-row: 2; }
+#products > ol:nth-of-type(4) { grid-column: 4; grid-row: 2; }
+#products > ol:nth-of-type(5) { grid-column: 5; grid-row: 2; }
+#products > ol:nth-of-type(6) { grid-column: 6; grid-row: 2; }
+#products > ol:nth-of-type(7) { grid-column: 7; grid-row: 2; border-right: none; }
+
+/* Галочка рядом с инпутом */
+#products ol:nth-of-type(7) {
+    position: relative;
+}
+
+#products ol:nth-of-type(7) input {
+    padding-right: 42px;
+}
+
+#products ol:nth-of-type(7) > svg {
+    position: absolute;
+    right: 14px;
+    bottom: 11px;
+    color: #22c55e;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+}
+
+#products ol:nth-of-type(7) > svg:hover {
+    color: #16a34a;
+    transform: scale(1.15);
+}
+
+#products ol:nth-of-type(7) li svg {
+    color: #ef4444;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+}
+
+#products ol:nth-of-type(7) li svg:hover {
+    color: #dc2626;
+    transform: scale(1.15);
+}
+
+/* ===== ORDERS (9 столбцов) ===== */
+#orders {
+    grid-template-columns: 60px 1.3fr 1fr 1.1fr 1.3fr 80px 1fr 1.2fr 1.3fr;
+}
+
+#orders > h2:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+#orders > h2:nth-of-type(2) { grid-column: 2; grid-row: 1; }
+#orders > h2:nth-of-type(3) { grid-column: 3; grid-row: 1; }
+#orders > h2:nth-of-type(4) { grid-column: 4; grid-row: 1; }
+#orders > h2:nth-of-type(5) { grid-column: 5; grid-row: 1; }
+#orders > h2:nth-of-type(6) { grid-column: 6; grid-row: 1; }
+#orders > h2:nth-of-type(7) { grid-column: 7; grid-row: 1; }
+#orders > h2:nth-of-type(8) { grid-column: 8; grid-row: 1; }
+#orders > h2:nth-of-type(9) { grid-column: 9; grid-row: 1; border-right: none; }
+
+#orders > ol:nth-of-type(1) { grid-column: 1; grid-row: 2; }
+#orders > ol:nth-of-type(2) { grid-column: 2; grid-row: 2; }
+#orders > ol:nth-of-type(3) { grid-column: 3; grid-row: 2; }
+#orders > ol:nth-of-type(4) { grid-column: 4; grid-row: 2; }
+#orders > ol:nth-of-type(5) { grid-column: 5; grid-row: 2; }
+#orders > ol:nth-of-type(6) { grid-column: 6; grid-row: 2; }
+#orders > ol:nth-of-type(7) { grid-column: 7; grid-row: 2; }
+#orders > ol:nth-of-type(8) { grid-column: 8; grid-row: 2; }
+#orders > ol:nth-of-type(9) { grid-column: 9; grid-row: 2; border-right: none; }
+
+/* ===== CATEGORIES (2 столбца) ===== */
+#categories {
+    grid-template-columns: 80px 1fr;
+    max-width: 480px;
+}
+
+#categories > h2:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+#categories > h2:nth-of-type(2) { grid-column: 2; grid-row: 1; border-right: none; }
+
+#categories > ol:nth-of-type(1) { grid-column: 1; grid-row: 2; }
+#categories > ol:nth-of-type(2) { grid-column: 2; grid-row: 2; border-right: none; }
