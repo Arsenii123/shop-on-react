@@ -195,12 +195,14 @@ export function Products(props) {
 export function ProductPage() {
     const [theme, setTheme] = useState(localStorage.getItem('theme'));
     const root = document.getElementById("root");
-    if (theme === "light") {
-        root.style.backgroundColor = "white";
-    }
-    else{
-        root.style.backgroundColor = "black";
-    }
+    useEffect(()=>{
+        if (theme === "light") {
+            root.style.backgroundColor = "white";
+        }
+        else{
+            root.style.backgroundColor = "black";
+        }
+    },[theme]);
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
         const root = document.getElementById("root");

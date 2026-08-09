@@ -580,12 +580,7 @@ function Homepage() {
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
     const root = document.getElementById("root");
-    if (theme === "light") {
-        root.style.backgroundColor = "white";
-    }
-    else{
-        root.style.backgroundColor = "black";
-    }
+
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
         const root = document.getElementById("root");
@@ -598,6 +593,14 @@ function Homepage() {
             localStorage.setItem("theme",'light');
         }
     };
+    useEffect(()=>{
+        if (theme === "light") {
+            root.style.backgroundColor = "white";
+        }
+        else{
+            root.style.backgroundColor = "black";
+        }
+    },[theme]);
     useEffect(() => {
         cart.map(item => {
             item.isCart = true;

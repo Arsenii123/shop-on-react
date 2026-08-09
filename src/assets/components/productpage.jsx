@@ -90,12 +90,14 @@ function OrderPage() {
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
     const root = document.getElementById("root");
-    if (theme === "light") {
-        root.style.backgroundColor = "white";
-    }
-    else{
-        root.style.backgroundColor = "black";
-    }
+    useEffect(()=>{
+        if (theme === "light") {
+            root.style.backgroundColor = "white";
+        }
+        else{
+            root.style.backgroundColor = "black";
+        }
+    },[theme]);
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
         const root = document.getElementById("root");
