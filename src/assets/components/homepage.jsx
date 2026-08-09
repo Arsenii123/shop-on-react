@@ -572,14 +572,31 @@ export function InfoCategories(props) {
     );
 }
 
+
 function Homepage() {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(localStorage.getItem('theme'));
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
+    const root = document.getElementById("root");
+    if (theme === "light") {
+        root.style.backgroundColor = "white";
+    }
+    else{
+        root.style.backgroundColor = "black";
+    }
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+        const root = document.getElementById("root");
+        if (theme === "light") {
+            root.style.backgroundColor = "black";
+            localStorage.setItem("theme",'dark');
+        }
+        else{
+            root.style.backgroundColor = "white";
+            localStorage.setItem("theme",'light');
+        }
     };
     useEffect(() => {
         cart.map(item => {
@@ -621,7 +638,7 @@ function Homepage() {
                     <BasicMenu></BasicMenu>
                     <div>
                         {/* Кнопка Каталог з меню */}
-                        <Menu shadow="md" width={280} position="bottom-start">
+                        <Menu shadow="md" width={280} position="bottom-start" className={`menuC ${theme}`}>
                             <Menu.Target>
                                 <Button
                                     variant="filled"
@@ -660,7 +677,7 @@ function Homepage() {
                             className="CartButton">
                         <IconShoppingCart size={24} stroke={1.5}/>
                     </Button>
-                    <Modal
+                    <Modal className={`window${theme}`}
                         opened={o}
                         onClose={() => setOpened(false)}
                         title="Кошик"
@@ -680,7 +697,7 @@ function Homepage() {
 
                         </Button>
                         {cart.map((item, index) => (
-                            <div key={index}>
+                            <div key={index} className={`pWindow${theme}`}>
                                 <InfoCategories
                                     name={item.name}
                                     price={item.price}
@@ -690,7 +707,19 @@ function Homepage() {
                                 />
                             </div>
                         ))}
-                        <button className="makemodalorder">Зробити замовлення</button>
+                        <Link to="/order">
+                            <button className="makemodalorder" onClick={
+                                ()=>{
+                                    for(let i of cart) {
+                                        orders.push(i);
+                                    }
+                                    clearCart();
+                                    cart.clear();
+                                }
+
+                            }>Зробити замовлення</button>
+                        </Link>
+
 
                     </Modal>
                     <ThemeContext.Consumer>

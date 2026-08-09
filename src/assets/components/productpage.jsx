@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {category, change, iconMap, InfoCategories,orders} from "./homepage.jsx";
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
-import {useCartItems} from "./Cart.js";
+import {clearCart, useCartItems} from "./Cart.js";
 import {useForm} from 'react-hook-form';
 import './styles/productpage.css'
 import {Orders} from "./Orders.js";
@@ -83,14 +83,30 @@ export function Categories() {
 }
 
 function OrderPage() {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(localStorage.getItem('theme'));
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [quantity, setQuantity] = useState(1);
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
+    const root = document.getElementById("root");
+    if (theme === "light") {
+        root.style.backgroundColor = "white";
+    }
+    else{
+        root.style.backgroundColor = "black";
+    }
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+        const root = document.getElementById("root");
+        if (theme === "light") {
+            root.style.backgroundColor = "black";
+            localStorage.setItem("theme",'dark');
+        }
+        else{
+            root.style.backgroundColor = "white";
+            localStorage.setItem("theme",'light');
+        }
     };
     useEffect(() => {
         cart.map(item => {
@@ -216,16 +232,16 @@ function OrderPage() {
                                 className="CartButton">
                             <IconShoppingCart size={24} stroke={1.5}/>
                         </Button>
-                        <Modal
-                            opened={o}
-                            onClose={() => setOpened(false)}
-                            title="Кошик"
-                            centered
-                            overlayProps={{
-                                opacity: 0.4, // затемнення
-                                blur: 2       // легке розмиття фону
-                            }}
-                            withCloseButton={false} // прибираємо стандартний хрестик
+                        <Modal className={`window${theme}`}
+                               opened={o}
+                               onClose={() => setOpened(false)}
+                               title="Кошик"
+                               centered
+                               overlayProps={{
+                                   opacity: 0.4, // затемнення
+                                   blur: 2       // легке розмиття фону
+                               }}
+                               withCloseButton={false} // прибираємо стандартний хрестик
                         >
                             <Button
                                 variant="subtle"
@@ -236,7 +252,7 @@ function OrderPage() {
 
                             </Button>
                             {cart.map((item, index) => (
-                                <div key={index}>
+                                <div key={index} className={`pWindow${theme}`}>
                                     <InfoCategories
                                         name={item.name}
                                         price={item.price}
@@ -246,7 +262,19 @@ function OrderPage() {
                                     />
                                 </div>
                             ))}
-                            <button className="makemodalorder">Зробити замовлення</button>
+                            <Link to="/order">
+                                <button className="makemodalorder" onClick={
+                                    ()=>{
+                                        for(let i of cart) {
+                                            orders.push(i);
+                                        }
+                                        clearCart();
+                                        cart.clear();
+                                    }
+
+                                }>Зробити замовлення</button>
+                            </Link>
+
 
                         </Modal>
                         <ThemeContext.Consumer>

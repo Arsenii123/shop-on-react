@@ -9,7 +9,7 @@ import {Provider} from 'react-redux';
 import OrderPage from "./assets/components/productpage.jsx";
 import AccountPage from "./assets/components/accountpage.jsx";
 import AdminPage from "./assets/components/adminpanel.jsx";
-
+import App from "./App.jsx";
 ReactDOM.createRoot(document.getElementById('root')).render(
 
     <MantineProvider>
@@ -32,5 +32,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 
         </Provider>
+
     </MantineProvider>
 );

@@ -2,38 +2,65 @@ import {Menu, Button, Modal} from "@mantine/core";
 import React, {useState,useEffect} from "react";
 import {IconHome, IconShoppingCart, IconUser, IconInfoCircle, IconMenu2, IconX} from "@tabler/icons-react";
 import {Link} from "react-router-dom";
-import {InfoCategories} from "./homepage.jsx";
-import {useCartItems} from "./Cart.js";
+import {InfoCategories, orders} from "./homepage.jsx";
+import {clearCart, useCartItems} from "./Cart.js";
 
 
 
 function Cart({isOpened}){
     const cart = useCartItems() || [];
     const [o, setOpened] = useState(false);
+    const theme = localStorage.getItem('theme');
 
     useEffect(() => {
         setOpened(isOpened);
     }, [isOpened]);
 
     return (
-        <Modal
-            opened={o}
-            onClose={() => setOpened(false)}
-            title="Кошик"
-            centered
-            overlayProps={{ opacity: 0.4, blur: 2 }}
-            withCloseButton={false}
+        <Modal className={`window${theme}`}
+               opened={o}
+               onClose={() => setOpened(false)}
+               title="Кошик"
+               centered
+               overlayProps={{
+                   opacity: 0.4, // затемнення
+                   blur: 2       // легке розмиття фону
+               }}
+               withCloseButton={false} // прибираємо стандартний хрестик
         >
             <Button
                 variant="subtle"
                 color="gray"
                 onClick={() => setOpened(false)}
-                leftSection={<IconX size={20} />}
-            />
+                leftSection={<IconX size={20}/>}
+            >
+
+            </Button>
             {cart.map((item, index) => (
-                <InfoCategories key={index} {...item} count={item.count || 1} />
+                <div key={index} className={`pWindow${theme}`}>
+                    <InfoCategories
+                        name={item.name}
+                        price={item.price}
+                        discount={item.discount}
+                        img={item.img}
+                        count={item.count || 1}
+                    />
+                </div>
             ))}
-            <button className="makemodalorder">Зробити замовлення</button>
+            <Link to="/order">
+                <button className="makemodalorder" onClick={
+                    ()=>{
+                        for(let i of cart) {
+                            orders.push(i);
+                        }
+                        clearCart();
+                        cart.clear();
+                    }
+
+                }>Зробити замовлення</button>
+            </Link>
+
+
         </Modal>
     );
 }

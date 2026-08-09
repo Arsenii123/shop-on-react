@@ -193,9 +193,25 @@ export function Products(props) {
 }
 
 export function ProductPage() {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(localStorage.getItem('theme'));
+    const root = document.getElementById("root");
+    if (theme === "light") {
+        root.style.backgroundColor = "white";
+    }
+    else{
+        root.style.backgroundColor = "black";
+    }
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+        const root = document.getElementById("root");
+        if (theme === "light") {
+            root.style.backgroundColor = "black";
+            localStorage.setItem("theme",'dark');
+        }
+        else{
+            root.style.backgroundColor = "white";
+            localStorage.setItem("theme",'light');
+        }
     };
     const {namepath} = useParams();
     const [price, setPrice] = useState(50000);
@@ -357,16 +373,16 @@ export function ProductPage() {
                             className="CartButton">
                         <IconShoppingCart size={24} stroke={1.5}/>
                     </Button>
-                    <Modal
-                        opened={o}
-                        onClose={() => setOpened(false)}
-                        title="Кошик"
-                        centered
-                        overlayProps={{
-                            opacity: 0.4, // затемнення
-                            blur: 2       // легке розмиття фону
-                        }}
-                        withCloseButton={false} // прибираємо стандартний хрестик
+                    <Modal className={`window${theme}`}
+                           opened={o}
+                           onClose={() => setOpened(false)}
+                           title="Кошик"
+                           centered
+                           overlayProps={{
+                               opacity: 0.4, // затемнення
+                               blur: 2       // легке розмиття фону
+                           }}
+                           withCloseButton={false} // прибираємо стандартний хрестик
                     >
                         <Button
                             variant="subtle"
@@ -377,7 +393,7 @@ export function ProductPage() {
 
                         </Button>
                         {cart.map((item, index) => (
-                            <div key={index}>
+                            <div key={index} className={`pWindow${theme}`}>
                                 <InfoCategories
                                     name={item.name}
                                     price={item.price}
@@ -387,7 +403,19 @@ export function ProductPage() {
                                 />
                             </div>
                         ))}
-                        <button className="makemodalorder">Зробити замовлення</button>
+                        <Link to="/order">
+                            <button className="makemodalorder" onClick={
+                                ()=>{
+                                    for(let i of cart) {
+                                        orders.push(i);
+                                    }
+                                    clearCart();
+                                    cart.clear();
+                                }
+
+                            }>Зробити замовлення</button>
+                        </Link>
+
 
                     </Modal>
                     <ThemeContext.Consumer>
