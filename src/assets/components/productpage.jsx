@@ -83,7 +83,9 @@ export function Categories() {
 }
 
 function OrderPage() {
-    const [theme, setTheme] = useState(localStorage.getItem('theme'));
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'light'; // или 'dark' — как тебе больше нравится
+    });
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [quantity, setQuantity] = useState(1);
@@ -99,16 +101,17 @@ function OrderPage() {
         }
     },[theme]);
     const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-        const root = document.getElementById("root");
-        if (theme === "light") {
-            root.style.backgroundColor = "black";
-            localStorage.setItem("theme",'dark');
-        }
-        else{
-            root.style.backgroundColor = "white";
-            localStorage.setItem("theme",'light');
-        }
+        setTheme((prev) => {
+            const newTheme = prev === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+
+            const root = document.getElementById('root');
+            if (root) {
+                root.style.backgroundColor = newTheme === 'dark' ? 'black' : 'white';
+            }
+
+            return newTheme;
+        });
     };
     useEffect(() => {
         cart.map(item => {
