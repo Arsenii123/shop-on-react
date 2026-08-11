@@ -10,6 +10,8 @@ import OrderPage from "./assets/components/productpage.jsx";
 import AccountPage from "./assets/components/accountpage.jsx";
 import AdminPage from "./assets/components/adminpanel.jsx";
 import App from "./App.jsx";
+import About from "./assets/components/about.jsx";
+import Contacts from "./assets/components/contacts.jsx";
 ReactDOM.createRoot(document.getElementById('root')).render(
 
     <MantineProvider>
@@ -26,7 +28,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     } />
                     <Route path="/account" element={<AccountPage></AccountPage>}/>
                     <Route path="/admin" element={<AdminPage></AdminPage>}/>
-
+                    <Route path="/contacts" element={<Contacts></Contacts>}/>
+                    <Route path="/about" element={<About></About>}/>
                 </Routes>
         </BrowserRouter>
 

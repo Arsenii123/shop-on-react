@@ -83,33 +83,36 @@ export function Categories() {
 }
 
 function OrderPage() {
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'light'; // или 'dark' — как тебе больше нравится
-    });
+
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [quantity, setQuantity] = useState(1);
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
-    const root = document.getElementById("root");
-    useEffect(()=>{
-        if (theme === "light") {
-            root.style.backgroundColor = "white";
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'light';
+    });
+
+// Применяем тему СРАЗУ при монтировании + при каждом изменении
+    useEffect(() => {
+        const root = document.getElementById('root');
+        const body = document.body;
+
+        if (root) {
+            root.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+            root.classList.remove('light', 'dark');
+            root.classList.add(theme);
         }
-        else{
-            root.style.backgroundColor = "black";
+
+        if (body) {
+            body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
         }
-    },[theme]);
+    }, [theme]);
+
     const toggleTheme = () => {
         setTheme((prev) => {
             const newTheme = prev === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
-
-            const root = document.getElementById('root');
-            if (root) {
-                root.style.backgroundColor = newTheme === 'dark' ? 'black' : 'white';
-            }
-
             return newTheme;
         });
     };
@@ -195,20 +198,19 @@ function OrderPage() {
                         <BasicMenu></BasicMenu>
                         <div>
                             {/* Кнопка Каталог з меню */}
-                            <Menu shadow="md" width={280} position="bottom-start">
+                            <Menu shadow="md" width={280} position="bottom-start" className={`menuC ${theme}`}>
                                 <Menu.Target>
                                     <Button
                                         variant="filled"
                                         color="red"
-                                        leftSection={<IconApps size={24} stroke={1.5}/>
-                                        }
+                                        leftSection={<IconApps size={24} stroke={1.5}/>}
                                         className="showgroups"
                                     >
                                         Каталог
                                     </Button>
                                 </Menu.Target>
 
-                                <Menu.Dropdown>
+                                <Menu.Dropdown className="catalog-dropdown">   {/* ← додай цей клас */}
                                     <Menu.Label>Категорії</Menu.Label>
                                     <Categories/>
                                 </Menu.Dropdown>

@@ -574,36 +574,40 @@ export function InfoCategories(props) {
 
 
 function Homepage() {
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'light'; // или 'dark' — как тебе больше нравится
-    });
+
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
-    const root = document.getElementById("root");
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'light';
+    });
+
+// Применяем тему СРАЗУ при монтировании + при каждом изменении
+    useEffect(() => {
+        const root = document.getElementById('root');
+        const body = document.body;
+
+        if (root) {
+            root.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+            root.classList.remove('light', 'dark');
+            root.classList.add(theme);
+        }
+
+        if (body) {
+            body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+        }
+    }, [theme]);
 
     const toggleTheme = () => {
         setTheme((prev) => {
             const newTheme = prev === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
-
-            const root = document.getElementById('root');
-            if (root) {
-                root.style.backgroundColor = newTheme === 'dark' ? 'black' : 'white';
-            }
-
             return newTheme;
         });
     };
-    useEffect(()=>{
-        if (theme === "light") {
-            root.style.backgroundColor = "white";
-        }
-        else{
-            root.style.backgroundColor = "black";
-        }
-    },[theme]);
+
+
     useEffect(() => {
         cart.map(item => {
             item.isCart = true;
@@ -649,15 +653,14 @@ function Homepage() {
                                 <Button
                                     variant="filled"
                                     color="red"
-                                    leftSection={<IconApps size={24} stroke={1.5}/>
-                                    }
+                                    leftSection={<IconApps size={24} stroke={1.5}/>}
                                     className="showgroups"
                                 >
                                     Каталог
                                 </Button>
                             </Menu.Target>
 
-                            <Menu.Dropdown>
+                            <Menu.Dropdown className="catalog-dropdown">   {/* ← додай цей клас */}
                                 <Menu.Label>Категорії</Menu.Label>
                                 <Categories/>
                             </Menu.Dropdown>

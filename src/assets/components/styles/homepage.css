@@ -338,7 +338,7 @@ button, .div .div, .main > svg, IconShoppingCart {
 .mantine-Modal-content {
     border-radius: 16px !important;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25) !important;
-    min-width: 720px !important;
+    min-width: 740px !important;
     margin-right: 112% !important;   /* приблизно по центру */
     position: relative !important;
 }
@@ -365,14 +365,25 @@ button, .div .div, .main > svg, IconShoppingCart {
 @media (max-width: 768px) {
     .mantine-Modal-content {
         margin-left: 5% !important;
-        max-width: 90% !important;
+        min-width: 500px !important;
+    }
+    .infoincart{
+        min-width: 300px !important;
     }
 }
 
 @media (max-width: 480px) {
     .mantine-Modal-content {
         margin-left: 2% !important;
-        max-width: 96% !important;
+        min-width: 96% !important;
+    }
+    .infoincart{
+        min-width: 180px !important;
+    }
+    .infoincart img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
     }
 }
 
@@ -554,6 +565,39 @@ button, .div .div, .main > svg, IconShoppingCart {
 
 .makemodalorder:hover {
     background: #e02a1b !important;
+}
+/* ===== Прокрутка в меню Каталогу ===== */
+.catalog-dropdown {
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+}
+
+/* Стилізація скролбару */
+.catalog-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.catalog-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.catalog-dropdown::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.catalog-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #f62d1f;
+}
+
+/* Темна тема */
+.dark .catalog-dropdown::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+.dark .catalog-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #f42d1f;
 }
 
 

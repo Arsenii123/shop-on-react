@@ -76,8 +76,8 @@ export default function BasicMenu() {
             option: "Інфо",
             icon: <IconInfoCircle size={20} />,
             info: [
-                { name: "Про нас", action: () => {} },
-                { name: "Контакти", action: () => {} },
+                { name: "Про нас", action: "/about" },
+                { name: "Контакти", action: "/contacts" },
             ]
         }
     ];
@@ -114,10 +114,13 @@ export default function BasicMenu() {
                                 {item.info.map((sub, subIndex) => (
                                     <Menu.Item
                                         key={subIndex}
-                                        onClick={sub.action}
+
                                         style={{ padding: "12px 20px 12px 50px", color: "#444" }}
                                     >
-                                        {sub.name}
+                                        <Link to={sub.action} style={{textDecoration: "none",color:"black"}}>
+                                            {sub.name}
+                                        </Link>
+
                                     </Menu.Item>
                                 ))}
                             </React.Fragment>

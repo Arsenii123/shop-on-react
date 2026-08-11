@@ -93,6 +93,8 @@ function InfiniteScrollLocal(props) {
     const [page, setPage] = useState(1);
     const loadMoreRef = useRef(null);
 
+
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -112,6 +114,7 @@ function InfiniteScrollLocal(props) {
                 observer.unobserve(loadMoreRef.current);
             }
         };
+
     }, []);
 
     useEffect(() => {
@@ -193,28 +196,31 @@ export function Products(props) {
 }
 
 export function ProductPage() {
+
     const [theme, setTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'light'; // или 'dark' — как тебе больше нравится
+        return localStorage.getItem('theme') || 'light';
     });
-    const root = document.getElementById("root");
-    useEffect(()=>{
-        if (theme === "light") {
-            root.style.backgroundColor = "white";
+
+// Применяем тему СРАЗУ при монтировании + при каждом изменении
+    useEffect(() => {
+        const root = document.getElementById('root');
+        const body = document.body;
+
+        if (root) {
+            root.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+            root.classList.remove('light', 'dark');
+            root.classList.add(theme);
         }
-        else{
-            root.style.backgroundColor = "black";
+
+        if (body) {
+            body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
         }
-    },[theme]);
+    }, [theme]);
+
     const toggleTheme = () => {
         setTheme((prev) => {
             const newTheme = prev === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
-
-            const root = document.getElementById('root');
-            if (root) {
-                root.style.backgroundColor = newTheme === 'dark' ? 'black' : 'white';
-            }
-
             return newTheme;
         });
     };
@@ -322,6 +328,7 @@ export function ProductPage() {
     const filtered = filteredName.filter(product =>
         product.rating === rating
     );
+    const productsToShow = rating === 6 ? filteredName : filtered;
     useEffect(() => {
         localStorage.setItem('found', String(namepath).trim().toLowerCase());
     }, [namepath])
@@ -338,20 +345,19 @@ export function ProductPage() {
                     <BasicMenu></BasicMenu>
                     <div>
                         {/* Кнопка Каталог з меню */}
-                        <Menu shadow="md" width={280} position="bottom-start">
+                        <Menu shadow="md" width={280} position="bottom-start" className={`menuC ${theme}`}>
                             <Menu.Target>
                                 <Button
                                     variant="filled"
                                     color="red"
-                                    leftSection={<IconApps size={24} stroke={1.5}/>
-                                    }
+                                    leftSection={<IconApps size={24} stroke={1.5}/>}
                                     className="showgroups"
                                 >
                                     Каталог
                                 </Button>
                             </Menu.Target>
 
-                            <Menu.Dropdown>
+                            <Menu.Dropdown className="catalog-dropdown">   {/* ← додай цей клас */}
                                 <Menu.Label>Категорії</Menu.Label>
                                 <Categories/>
                             </Menu.Dropdown>
@@ -461,7 +467,7 @@ export function ProductPage() {
                         </select>
                     </div>
 
-                    <InfiniteScrollLocal items={rating === 6 ? filteredName : filtered}></InfiniteScrollLocal>
+                    <InfiniteScrollLocal items={productsToShow}></InfiniteScrollLocal>
 
 
                 </section>

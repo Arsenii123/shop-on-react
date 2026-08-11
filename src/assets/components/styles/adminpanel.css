@@ -227,3 +227,127 @@ main a:hover {
 
 #categories > ol:nth-of-type(1) { grid-column: 1; grid-row: 2; }
 #categories > ol:nth-of-type(2) { grid-column: 2; grid-row: 2; border-right: none; }
+/* ===== Адаптивність ===== */
+
+/* ===== Планшети (до 1024px) ===== */
+@media (max-width: 1024px) {
+    main {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* PRODUCTS і ORDERS стають прокручуваними */
+    #products,
+    #orders {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin: 0 16px 24px;
+        border-radius: 10px;
+    }
+
+    #categories {
+        max-width: 100%;
+        margin: 0 16px 24px;
+    }
+
+    header {
+        font-size: 22px;
+        text-align: center;
+        margin: 12px;
+    }
+
+    .goTOHomePage {
+        width: 100%;
+        justify-content: center;
+        margin: 12px 0;
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+
+    #products h2,
+    #orders h2,
+    #categories h2 {
+        font-size: 11px;
+        padding: 10px;
+    }
+
+    #products li,
+    #orders li,
+    #categories li {
+        font-size: 13px;
+        padding: 8px;
+    }
+}
+@media (max-width: 1380px) {
+    #products,
+    #orders {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+
+
+/* Смартфони (до 768px) */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    #products,
+    #orders {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #products h2,
+    #orders h2,
+    #categories h2 {
+        font-size: 11px;
+        padding: 10px;
+    }
+
+    #products li,
+    #orders li,
+    #categories li {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .goTOHomePage {
+        width: 100%;
+        justify-content: center;
+        margin: 12px 0;
+    }
+}
+
+/* Дуже маленькі екрани (до 480px) */
+@media (max-width: 480px) {
+    header {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #products,
+    #orders,
+    #categories {
+        margin: 0 12px 20px;
+        border-radius: 8px;
+    }
+
+    #products h2,
+    #orders h2,
+    #categories h2 {
+        font-size: 10px;
+        letter-spacing: 0.02em;
+    }
+
+    .goTOHomePage {
+        font-size: 12px;
+        padding: 8px 14px;
+    }
+}

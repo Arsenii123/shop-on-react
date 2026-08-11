@@ -1,24 +1,34 @@
+import {Category, SubCategory, useCategoryItems, Clears} from "./Categorry.js";
+import {Product} from "./Product.js";
+import {useCartItems, addToCart, deleteFromCart, clearCart, updateCart} from "./Cart.js";
+import React, {useState, useEffect, createContext, useContext, useReducer} from "react";
+import {Modal, Button, Group, Menu} from "@mantine/core";
 import BasicMenu from "./Menu.jsx";
-import {Button, Menu, Modal} from "@mantine/core";
-import {IconApps, IconHome, IconSearch, IconSettings, IconShoppingCart, IconUser, IconX} from "@tabler/icons-react";
-import {Link} from "react-router-dom";
-import {category, change, iconMap, InfoCategories, orders} from "./homepage.jsx";
-import React, {createContext, useContext, useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {clearCart, useCartItems} from "./Cart.js";
-import {useForm} from 'react-hook-form';
-import './styles/accountpage.css'
-
+import {BrowserRouter, Routes, Route, NavLink, Link} from 'react-router-dom';
+import {category, change, iconMap, InfoCategories, orders, products} from "./homepage.jsx";
+import {
+    IconApps, IconSearch, IconHome, IconShoppingCart, IconUser, IconShirt,
+    IconBike,
+    IconBook,
+    IconDog,
+    IconWashMachine,
+    IconGardenCart,
+    IconDeviceMobile,
+    IconSettings,
+    IconHeart,
+    IconStar,
+    IconX,
+    IconPlus,
+    IconMinus
+} from '@tabler/icons-react';
+import './styles/contacts.css'
+import {useSelector, useDispatch, Provider} from 'react-redux'
+import {configureStore, createSlice} from '@reduxjs/toolkit'
 const ThemeContext = createContext();
-const form = {
-    password: '',
-    email: ''
-}
-
-export function C(props) {
+function C(props) {
     const [name, setName] = useState(props.name);
     const [show, setShow] = useState(true);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch() // отримуємо функцію для відправки дій
 
     useEffect(() => {
         if (props.name === "" || props.name === null) {
@@ -41,14 +51,17 @@ export function C(props) {
                     </h3>
                     <ul>
                         {currentCategory.categories.map((item, index) => (
-                            <Link to={`/category/${item.name.trim().toLowerCase()}`} className="goToProduct" onClick={() => {
-                                dispatch(change(item.name))
-                                localStorage.setItem('found', item.name.trim().toLowerCase());
-                            }} key={index}>
+
+                            <Link to={`/category/${item.name.trim().toLowerCase()}`} className="goToProduct"
+                                  onClick={() => {
+                                      dispatch(change(item.name))
+                                      localStorage.setItem('found', item.name.trim().toLowerCase());
+                                  }} key={index}>
                                 <li>
                                     {item.name}
                                 </li>
                             </Link>
+
                         ))}
 
                     </ul>
@@ -59,7 +72,7 @@ export function C(props) {
     );
 }
 
-export function Categories() {
+function Categories() {
     const {theme} = useContext(ThemeContext);
     return (
         <div className={`div ${theme}`}>
@@ -74,13 +87,12 @@ export function Categories() {
     );
 }
 
-function AccountPage() {
+
+export default function Contacts() {
     const [o, setOpened] = useState(false);
     const cart = useCartItems() || [];
     const [search, setSearch] = useState("");
     const [searchedCategory, setSearchedCategory] = useState('');
-    const email=localStorage.getItem("email") || '';
-    const password=localStorage.getItem("password") || '';
     const [theme, setTheme] = useState(() => {
         return localStorage.getItem('theme') || 'light';
     });
@@ -108,6 +120,14 @@ function AccountPage() {
             return newTheme;
         });
     };
+
+
+    useEffect(() => {
+        cart.map(item => {
+            item.isCart = true;
+            localStorage.setItem("isCart", String(item.isCart));
+        })
+    }, [cart])
     useEffect(() => {
         cart.map(item => {
             item.isCart = true;
@@ -134,55 +154,9 @@ function AccountPage() {
 
         setSearchedCategory(foundCategory);
     }, [search]);
-    const {register, handleSubmit, formState: {errors, isSubmitting}, reset} = useForm({
-        defaultValues: form,
-        mode: 'onChange'
-    });
-    const onSubmit = async (data) => {
-
-        try {
-            const formData = new FormData();
-            Object.entries(data).forEach(([key, value]) => {
-                if (key === 'quantity') {
-                    value.forEach(lang => formData.append('quantity', lang));
-                } else {
-                    formData.append(key, value);
-                }
-            });
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    e: data.email,
-                    p: data.password
-                }), // перетворення даних форми в JSON-рядок
-            });
-            if (response.ok) {
-                console.log('статус відповіді:', response.status);
-                console.log('надійслані дані:', data);
-                localStorage.setItem('email',data.email);
-                localStorage.setItem('password',data.password);
-                alert('Дані успішно надіслано!');
-                reset(form);
-            } else {
-                throw new Error('Помилка сервера: ' + response.status);
-            }
-            // повернення успішного результату з даними
-        } catch (error) {
-            console.error('Помилка API:', error);
-            return {success: false, error: error.message};
-        }
-    }
-    const handleReset = () => {
-        reset(form);
-    };
-    return (
+    return(
         <>
             <ThemeContext.Provider value={{theme, toggleTheme}}>
-
                 <header className={`header ${theme}`}></header>
                 <main className={`main ${theme}`}>
                     <BasicMenu></BasicMenu>
@@ -279,76 +253,70 @@ function AccountPage() {
 
 
                 </main>
-                <section className={`form${theme}`}>
-                    {email && password !== '' ? (
-                        <>
+                <section className={`contacts${theme}`}>
+                    <div className={`contacts__container${theme}`}>
+                        <h1 className={`contacts__title${theme}`}>Контакти</h1>
+                        <p className={`contacts__subtitle${theme}`}>
+                            Ми завжди на зв’язку і готові допомогти з будь-яким питанням
+                        </p>
 
-                        <h2 className={`orderName${theme}`}>Аккаунт</h2>
-                        <div className={`accountInfo${theme}`}>
-                            <p>Email:{email}</p>
-                            <p>Password:{password}</p>
-                            <button className="change" onClick={()=>{
-                                localStorage.setItem('email', '');
-                                localStorage.setItem('password', '');
-                                handleReset();
-                            }}>Change account</button>
-                            {email==="admin@gmail.com" && password==="admin123" ? (
-                                <Link to="/admin">
-                                    <button className="Admin">Admin panel</button>
-                                </Link>
-                            ): (null)}
+                        <div className={`contacts__info${theme}`}>
+                            <div className={`contacts__item${theme}`}>
+                                <div className={`contacts__icon${theme}`}>📞</div>
+                                <div>
+                                    <h3 className={`contacts__item-title${theme}`}>Телефон</h3>
+                                    <a href="tel:+380441234567" className={`contacts__link${theme}`}>
+                                        +38 (044) 123-45-67
+                                    </a>
+                                    <p className={`contacts__text${theme}`}>
+                                        Пн–Пт: 9:00 – 20:00<br />
+                                        Сб–Нд: 10:00 – 18:00
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className={`contacts__item${theme}`}>
+                                <div className={`contacts__icon${theme}`}>✉️</div>
+                                <div>
+                                    <h3 className={`contacts__item-title${theme}`}>Email</h3>
+                                    <a href="mailto:info@myonlineshop.com" className={`contacts__link${theme}`}>
+                                        info@myonlineshop.com
+                                    </a>
+                                    <p className={`contacts__text${theme}`}>Відповідаємо протягом 24 годин</p>
+                                </div>
+                            </div>
+
+                            <div className={`contacts__item${theme}`}>
+                                <div className={`contacts__icon${theme}`}>📍</div>
+                                <div>
+                                    <h3 className={`contacts__item-title${theme}`}>Адреса</h3>
+                                    <p className={`contacts__text${theme}`}>
+                                        м. Київ, вул. Хрещатик, 22<br />
+                                        (офіс і пункт видачі)
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className={`contacts__item${theme}`}>
+                                <div className={`contacts__icon${theme}`}>💬</div>
+                                <div>
+                                    <h3 className={`contacts__item-title${theme}`}>Месенджери</h3>
+                                    <div className={`contacts__messengers${theme}`}>
+                                        <a href="#" className={`contacts__messenger${theme}`}>Telegram</a>
+                                        <a href="#" className={`contacts__messenger${theme}`}>Viber</a>
+                                        <a href="#" className={`contacts__messenger${theme}`}>WhatsApp</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        </>
-                    ) : (
-                        <>
-                        <h2 className={`orderName${theme}`}>Реєстрація</h2>
-                        <form onSubmit={handleSubmit(onSubmit)} id="makeOrder">
-                    <label htmlFor="email">Email:</label>
-                    <input className={`inputs${theme}`}
-
-                           type="email"
-                           id="email"
-                           name="email"
-                           placeholder="Print your email address..."
-                           {...register('email', {
-                               required: 'Пошта обов\'язкова',
-                               pattern: {
-                                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                   message: 'Некоректний формат електронної пошти'
-                               }
-                           })}
-
-                    />
-                    {errors.email && <p className="incorrect">{errors.email.message}</p>}
-                    <label htmlFor="password">Password:</label>
-                    <input className={`inputs${theme}`}
-                           type="password"
-                           id="password"
-                           name="password"
-                           placeholder="Enter your password..."
-                           {...register('password', {
-                               required: 'Пароль обов’язковий',
-                               minLength: {value: 6, message: 'Пароль має містити мінімум 6 символів'},
-                               pattern: {
-                                   value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/,
-                                   message: 'Пароль має містити літери та цифри'
-                               }
-                           })}
-
-                    />
-                    {errors.password && <p className="incorrect">{errors.password.message}</p>}
-                    <input type="submit" value="Submit" id="isOrder" disabled={isSubmitting}/>
-                    <input type="reset" value="Reset" id="isOrder" onClick={handleReset}/>
-
-                </form>
-                        </>)}
-
+                    </div>
                 </section>
+                <footer className={`footer ${theme}`}>
+
+                </footer>
             </ThemeContext.Provider>
+
+
         </>
-
     )
-
 }
-
-export default AccountPage;
